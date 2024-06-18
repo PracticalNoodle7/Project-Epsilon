@@ -5,6 +5,8 @@
 //foward declarations
 class Texture2D;
 class Character;
+class Ground;
+class GameObject;
 
 class GameScreenLevel1 : GameScreen
 {
@@ -22,5 +24,7 @@ private:
 	Texture2D* m_background_texture;
 	bool SetUpLevel1();
 	Character* m_character;
+	Ground* m_ground;
+	GameObject* m_gameObject;
 };
 
