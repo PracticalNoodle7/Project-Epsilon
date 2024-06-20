@@ -26,14 +26,15 @@ protected:
 
 	//Movment variable
 	bool m_is_moving;
+	bool m_move_up;
 	bool m_move_left;
+	bool m_move_down;
 	bool m_move_right;
-	bool m_can_jump;
-	bool m_jumping;
 	float m_acceleration;
 
+	virtual void MoveUp(float deltaTime);
 	virtual void MoveLeft(float deltaTime);
+	virtual void MoveDown(float deltaTime);
 	virtual void MoveRight(float deltaTime);
-	virtual void Jump();
 };
 

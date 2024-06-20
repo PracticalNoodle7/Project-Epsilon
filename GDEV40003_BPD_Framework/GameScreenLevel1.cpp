@@ -2,6 +2,7 @@
 #include "Texture2D.h"
 #include "Character.h"
 #include "Ground.h"
+#include "Constants.h"
 #include <iostream>
 using namespace std;
 
@@ -24,14 +25,12 @@ void GameScreenLevel1::Render()
 	m_background_texture->Render(Vector2D(), SDL_FLIP_NONE);
 	m_character->Render();
 	m_ground->Render();
-
 }
 
 void GameScreenLevel1::Update(float deltaTime, SDL_Event e)
 {
 	//update character
 	m_character->Update(deltaTime, e);
-	m_gameObject->Update(deltaTime, e);
 	m_ground->Update(deltaTime, e);
 }
 
@@ -46,9 +45,8 @@ bool GameScreenLevel1::SetUpLevel1()
 	}
 
 	//set up player character
-	m_character = new Character(m_renderer, "images/tile_0084.png", Vector2D(64, 330));
+	m_character = new Character(m_renderer, "images/tile_0084.png", Vector2D(640, 360));
 	m_ground = new Ground(m_renderer, "images/tile_0084.png", Vector2D(400, 330));
-	m_gameObject = new GameObject(m_renderer, "images/tile_0084.png", Vector2D());
 
 	return true;
 }

@@ -20,11 +20,11 @@ void Character::Render()
 	//draw the Character
 	if (m_facing_direction == FACING_RIGHT)
 	{
-		m_texture->Render(m_position, SDL_FLIP_NONE);
+		m_texture->RenderCenter(m_position, SDL_FLIP_NONE);
 	}
 	else
 	{
-		m_texture->Render(m_position, SDL_FLIP_HORIZONTAL);
+		m_texture->RenderCenter(m_position, SDL_FLIP_HORIZONTAL);
 	}
 }
 
