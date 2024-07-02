@@ -39,6 +39,13 @@ enum FACING
 	FACING_RIGHT
 };
 
+enum ROTATION
+{
+	ZERO,
+	NINETY,
+	ONE_EIGHTY
+};
+
 struct Rect2D
 {
 	float x;

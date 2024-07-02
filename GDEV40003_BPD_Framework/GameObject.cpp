@@ -30,7 +30,7 @@ GameObject::~GameObject()
 void  GameObject::Render()
 {
 	//draw the GameObject
-	m_texture->Render(m_position, SDL_FLIP_NONE);
+	m_texture->Render(m_position, SDL_FLIP_NONE, 0.0);
 }
 
 void GameObject::Update(float deltaTime, SDL_Event e)

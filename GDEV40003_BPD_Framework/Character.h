@@ -8,6 +8,7 @@ public:
 	~Character();
 
 	virtual void Render() override;
+
 	Vector2D previousPosition;
 
 private:
