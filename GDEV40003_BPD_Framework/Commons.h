@@ -43,7 +43,8 @@ enum ROTATION
 {
 	ZERO,
 	NINETY,
-	ONE_EIGHTY
+	ONE_EIGHTY,
+	TWO_SEVENTY
 };
 
 struct Rect2D

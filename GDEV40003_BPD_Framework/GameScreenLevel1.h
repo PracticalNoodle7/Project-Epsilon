@@ -1,6 +1,7 @@
 #pragma once
 #include "GameScreen.h"
 #include "Commons.h"
+#include <vector>
 
 //foward declarations
 class Character;
@@ -19,7 +20,13 @@ public:
 
 private:
 	bool SetUpLevel1();
+
+	//Declaring class pointers
 	Character* m_character;
-	Background* m_background;
+
+	//Declaring class vectors
+	vector<Background*> m_Backgrounds;
+
+
 };
 

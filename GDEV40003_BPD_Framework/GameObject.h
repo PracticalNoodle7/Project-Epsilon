@@ -23,7 +23,6 @@ protected:
 	SDL_Renderer* m_renderer;
 	Texture2D* m_texture;
 
-
 	//Movment variable
 	bool m_is_moving;
 	bool m_move_up;
@@ -32,6 +31,7 @@ protected:
 	bool m_move_right;
 	float m_acceleration;
 
+	//Movment Functions
 	virtual void MoveUp(float deltaTime);
 	virtual void MoveLeft(float deltaTime);
 	virtual void MoveDown(float deltaTime);

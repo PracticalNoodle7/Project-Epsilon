@@ -2,10 +2,11 @@
 #include "Texture2D.h"
 #include "Constants.h"
 
-Background::Background(SDL_Renderer* renderer, string imagePath, Vector2D start_Position) : GameObject(renderer, imagePath, start_Position)
+Background::Background(SDL_Renderer* renderer, string imagePath, Vector2D start_Position, ROTATION rotation) : GameObject(renderer, imagePath, start_Position)
 {
+	m_rotation = rotation;
+
 	//initialising moving variables
-	m_rotation = ZERO;
 	m_is_moving = true;
 }
 
@@ -24,8 +25,12 @@ void Background::Render()
 	{
 		m_texture->Render(m_position, SDL_FLIP_NONE, 90.0);
 	}
-	else
+	else if (m_rotation == ONE_EIGHTY)
 	{
 		m_texture->Render(m_position, SDL_FLIP_NONE, 180.0);
+	}
+	else
+	{
+		m_texture->Render(m_position, SDL_FLIP_NONE, 270.0);
 	}
 }

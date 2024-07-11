@@ -4,7 +4,7 @@
 class Background : public GameObject
 {
 public:
-	Background(SDL_Renderer* renderer, string imagePath, Vector2D start_Position);
+	Background(SDL_Renderer* renderer, string imagePath, Vector2D start_Position, ROTATION rotation);
 	~Background();
 
 	virtual void Render() override;
