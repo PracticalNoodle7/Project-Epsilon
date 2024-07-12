@@ -27,8 +27,6 @@ void GameScreenLevel1::Render()
 	}
 
 	m_character->Render();
-
-
 }
 
 void GameScreenLevel1::Update(float deltaTime, SDL_Event e)

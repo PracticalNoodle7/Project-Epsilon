@@ -26,7 +26,5 @@ private:
 
 	//Declaring class vectors
 	vector<Background*> m_Backgrounds;
-
-
 };
 
