@@ -9,6 +9,7 @@ Texture2D::Texture2D(SDL_Renderer* renderer)
 	m_width = 0;
 	m_height = 0;
 	m_texture = nullptr;
+	m_tile_map_texture = nullptr;
 	m_renderer = renderer;
 }
 
@@ -56,7 +57,7 @@ bool Texture2D::LoadFromFile(string path)
 SDL_Texture* Texture2D::LoadFromFileBackground(std::string path)
 {
 	//remove memory used for a previouse texture
-	Free();
+	//Free();
 
 	//Load the image
 	SDL_Surface* p_surface = IMG_Load(path.c_str());
@@ -66,8 +67,8 @@ SDL_Texture* Texture2D::LoadFromFileBackground(std::string path)
 		SDL_SetColorKey(p_surface, SDL_TRUE, SDL_MapRGB(p_surface->format, 0, 0XFF, 0XFF));
 
 		//create the texture from the pixels on the surface
-		m_texture = SDL_CreateTextureFromSurface(m_renderer, p_surface);
-		if (m_texture == nullptr)
+		m_tile_map_texture = SDL_CreateTextureFromSurface(m_renderer, p_surface);
+		if (m_tile_map_texture == nullptr)
 		{
 			cout << "Unable to create texture from surface. Error: " << SDL_GetError();
 		}
@@ -85,7 +86,7 @@ SDL_Texture* Texture2D::LoadFromFileBackground(std::string path)
 	}
 
 	//return the texture
-	return m_texture;
+	return m_tile_map_texture;
 }
 
 void Texture2D::Free()

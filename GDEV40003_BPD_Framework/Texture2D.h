@@ -25,6 +25,7 @@ public:
 private:
 	SDL_Renderer* m_renderer;
 	SDL_Texture* m_texture;
+	SDL_Texture* m_tile_map_texture;
 
 	int m_width;
 	int m_height;
