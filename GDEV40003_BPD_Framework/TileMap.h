@@ -17,14 +17,16 @@ public:
 	void Renderer();
 
 private:
-	SDL_Renderer* m_renderer;
+	Vector2D m_position;
 
-	SDL_Rect src, dest;
-
-	Texture2D* dirt;
-	Texture2D* grass;
+	SDL_Texture* dirt;
+	SDL_Texture* dirt_edge;
 	SDL_Texture* water;
 
 	int m_tile_map[20][25];
+
+protected:
+	SDL_Renderer* m_renderer;
+	Texture2D* m_texture;
 };
 

@@ -29,7 +29,12 @@ TileMap::TileMap(SDL_Renderer* renderer)
 {
 	m_renderer = renderer;
 
-	dirt->LoadFromFile("images/Tiles/tile_0000.png");
+	//load texture
+	m_texture = new Texture2D(m_renderer);
+
+	dirt = m_texture->LoadFromFileBackground("images/Tiles/tile_0048.png");
+	dirt_edge = m_texture->LoadFromFileBackground("images/Tiles/tile_0050.png");
+	
 
 	LoadTileMap(Level1);
 }
@@ -38,6 +43,8 @@ TileMap::~TileMap()
 {
 	delete dirt;
 	dirt = nullptr;
+	delete dirt_edge;
+	dirt_edge = nullptr;
 }
 
 void TileMap::LoadTileMap(int arr[20][25])
@@ -61,11 +68,16 @@ void TileMap::Renderer()
 		{
 			type = m_tile_map[row][column];
 
+			m_position.x = column * 16;
+			m_position.y = row * 16;
+
 			switch (type)
 			{
 			case 0:
+				m_texture->RenderBackground(dirt, Vector2D(m_position.x, m_position.y));
 				break;
 			case 1:
+				m_texture->RenderBackground(dirt_edge, Vector2D(m_position.x, m_position.y));
 				break;
 			case 2:
 				break;

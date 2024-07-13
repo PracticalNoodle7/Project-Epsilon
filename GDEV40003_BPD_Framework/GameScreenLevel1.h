@@ -6,6 +6,7 @@
 //foward declarations
 class Character;
 class Background;
+class TileMap;
 
 class GameScreenLevel1 : GameScreen
 {
@@ -23,6 +24,7 @@ private:
 
 	//Declaring class pointers
 	Character* m_character;
+	TileMap* m_tile_map;
 
 	//Declaring class vectors
 	vector<Background*> m_Backgrounds;
