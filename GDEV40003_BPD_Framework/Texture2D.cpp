@@ -122,12 +122,14 @@ void Texture2D::RenderCenter(Vector2D new_position, SDL_RendererFlip flip, doubl
 	SDL_RenderCopyEx(m_renderer, m_texture, nullptr, &renderLocation, angle, &center, flip);
 }
 
-void Texture2D::RenderBackground(SDL_Texture* texture, Vector2D new_position)
+void Texture2D::RenderBackground(SDL_Texture* texture, SDL_Rect srcRect, Vector2D new_position)
 {
 	//Set where to render the texture
-	SDL_Rect renderLocation = { new_position.x, new_position.y, m_width, m_height };
+	SDL_Rect renderLocation = { new_position.x, new_position.y, srcRect.w, srcRect.h };
 
-	SDL_RenderCopy(m_renderer, texture, nullptr, &renderLocation);
+	SDL_Rect renderImage = { srcRect.x, srcRect.y, srcRect.w, srcRect.h };
+
+	SDL_RenderCopy(m_renderer, texture, &renderImage, &renderLocation);
 }
 
 

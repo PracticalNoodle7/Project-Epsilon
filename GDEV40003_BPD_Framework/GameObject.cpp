@@ -16,6 +16,10 @@ GameObject::GameObject(SDL_Renderer* renderer, string imagePath, Vector2D start_
 
 	//load texture
 	m_texture = new Texture2D(m_renderer);
+	if (!m_texture->LoadFromFile(imagePath))
+	{
+		cout << "Error, can not load character texture" << endl;
+	}
 }
 
 GameObject::~GameObject()
