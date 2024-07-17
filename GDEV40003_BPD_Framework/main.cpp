@@ -59,6 +59,9 @@ bool InitSDL()
 		return false;
 	}
 
+	// Set the texture scaling mode to nearest neighbor (disable interpolation)
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+
 	// Create window
 	g_window = SDL_CreateWindow("Project A", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	if (g_window == nullptr)

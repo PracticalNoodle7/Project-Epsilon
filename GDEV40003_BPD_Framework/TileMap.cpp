@@ -16,7 +16,8 @@ TileMap::TileMap(SDL_Renderer* renderer)
 
 TileMap::~TileMap()
 {
-
+	m_renderer = nullptr;
+	m_texture = nullptr;
 }
 
 void TileMap::LoadTileMap(int arr[30][35])

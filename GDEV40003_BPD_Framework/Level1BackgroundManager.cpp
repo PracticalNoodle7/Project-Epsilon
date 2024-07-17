@@ -36,6 +36,14 @@ int Level1[30][35] = {
 
 Level1BackgroundManager::Level1BackgroundManager(SDL_Renderer* renderer) : TileMap(renderer)
 {
+	//Initialising Movment variable
+	m_is_moving = true;
+	m_move_up = false;
+	m_move_left = false;
+	m_move_down = false;
+	m_move_right = false;
+	m_acceleration = 5;
+
 	if (m_texture != nullptr)
 	{
 		m_grass = m_texture->LoadFromFileBackground("images/Overworld_Tile/Grass_TileMap.png");
@@ -57,9 +65,8 @@ void Level1BackgroundManager::LoadTileMap(int arr[30][35])
 		for (int column = 0; column < 35; column++)
 		{
 			m_tile_map[row][column].type = arr[row][column];
-			m_tile_map[row][column].x = column * 32;
-			m_tile_map[row][column].y = row * 32;
-			
+			m_tile_map[row][column].x = (column + 5) * 32;
+			m_tile_map[row][column].y = (row + 5) * 32;
 		}
 	}
 }
@@ -118,3 +125,134 @@ void Level1BackgroundManager::Render()
 	}
 }
 
+void Level1BackgroundManager::Update(float deltaTime, SDL_Event e)
+{
+	if (m_is_moving)
+	{
+		if (m_move_up)
+		{
+			MoveUp(deltaTime);
+		}
+		else if (m_move_left)
+		{
+			MoveLeft(deltaTime);
+		}
+		else if (m_move_down)
+		{
+			MoveDown(deltaTime);
+		}
+		else if (m_move_right)
+		{
+			MoveRight(deltaTime);
+		}
+
+		//handle the events
+		switch (e.type)
+		{
+		case SDL_KEYDOWN:
+
+			switch (e.key.keysym.sym)
+			{
+				//Press W to move up
+			case SDLK_w:
+				m_move_up = true;
+				break;
+
+				//Press A to move left
+			case SDLK_a:
+				m_move_left = true;
+				break;
+
+				//Press S to move down
+			case SDLK_s:
+				m_move_down = true;
+				break;
+
+				//Press D to move right
+			case SDLK_d:
+				m_move_right = true;
+				break;
+			}
+			break;
+		case SDL_KEYUP:
+			switch (e.key.keysym.sym)
+			{
+				//Check if w is up
+			case SDLK_w:
+				m_move_up = false;
+				break;
+
+				//Check if a is up
+			case SDLK_a:
+				m_move_left = false;
+				break;
+
+				//Check if s is up
+			case SDLK_s:
+				m_move_down = false;
+				break;
+
+				//Check if d is up
+			case SDLK_d:
+				m_move_right = false;
+				break;
+			}
+		}
+	}
+}
+
+void Level1BackgroundManager::MoveUp(float deltaTime)
+{
+	if (m_move_up)
+	{
+		for (int row = 0; row < 30; row++)
+		{
+			for (int column = 0; column < 35; column++)
+			{
+				m_tile_map[row][column].y += deltaTime * 200;
+			}
+		}
+	}
+}
+
+void Level1BackgroundManager::MoveLeft(float deltaTime)
+{
+	if (m_move_left)
+	{
+		for (int row = 0; row < 30; row++)
+		{
+			for (int column = 0; column < 35; column++)
+		    {
+				m_tile_map[row][column].x += deltaTime * 200;
+			}
+		}
+	}
+}
+
+void Level1BackgroundManager::MoveDown(float deltaTime)
+{
+	if (m_move_down)
+	{
+		for (int row = 0; row < 30; row++)
+		{
+			for (int column = 0; column < 35; column++)
+			{
+				m_tile_map[row][column].y -= deltaTime * 200;
+			}
+		}
+	}
+}
+
+void Level1BackgroundManager::MoveRight(float deltaTime)
+{
+	if (m_move_right)
+	{
+		for (int row = 0; row < 30; row++)
+		{
+			for (int column = 0; column < 35; column++)
+			{
+				m_tile_map[row][column].x -= deltaTime * 200;
+			}
+		}
+	}
+}

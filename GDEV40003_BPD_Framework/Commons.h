@@ -69,4 +69,10 @@ struct Camera
 	float width, height;
 };
 	
+struct Tile
+{
+	int type;
+	float x, y;
+
+};
 

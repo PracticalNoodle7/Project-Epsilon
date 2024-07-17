@@ -16,9 +16,8 @@ public:
 
 	virtual void LoadTileMap(int arr[30][35]);
 	virtual void Render();
-	void Update(float deltaTime, SDL_Event e);
+	virtual void Update(float deltaTime, SDL_Event e);
 
-	//void Update(float deltaTime, SDL_Event e);
 	//void SetPosition(Vector2D new_position);
 	//Vector2D GetPosition();
 	Vector2D m_position;

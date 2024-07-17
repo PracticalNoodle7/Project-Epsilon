@@ -28,6 +28,7 @@ void GameScreenLevel1::Render()
 void GameScreenLevel1::Update(float deltaTime, SDL_Event e)
 {
 	//update the character
+	m_background->Update(deltaTime, e);
 	m_character->Update(deltaTime, e);
 }
 
