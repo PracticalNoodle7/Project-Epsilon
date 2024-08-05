@@ -35,8 +35,8 @@ void GameScreenLevel1::Update(float deltaTime, SDL_Event e)
 bool GameScreenLevel1::SetUpLevel1()
 {
 	//set up player character
-	m_character = new Character(m_renderer, "images/tile_0084.png", Vector2D(640, 360));
-	m_background = new Level1BackgroundManager(m_renderer);
+	m_background = new Level1BackgroundManager(m_renderer, Vector2D());
+	m_character = new Character(m_renderer, Vector2D(640, 360));
 
 	return true;
 }

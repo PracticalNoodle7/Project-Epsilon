@@ -1,10 +1,15 @@
 #include "GameObject.h"
 #include "Texture2D.h"
 
-GameObject::GameObject(SDL_Renderer* renderer, string imagePath, Vector2D start_position)
+GameObject::GameObject(SDL_Renderer* renderer, Vector2D start_position)
 {
+	m_facing_direction = FACING_LEFT;
+
 	m_renderer = renderer;
 	m_position = start_position;
+
+	//load texture
+	m_texture = new Texture2D(m_renderer);
 
 	//Initialising Movment variable
 	m_is_moving = true;
@@ -14,12 +19,10 @@ GameObject::GameObject(SDL_Renderer* renderer, string imagePath, Vector2D start_
 	m_move_right = false;
 	m_acceleration = 5;
 
-	//load texture
-	m_texture = new Texture2D(m_renderer);
-	if (!m_texture->LoadFromFile(imagePath))
-	{
-		cout << "Error, can not load character texture" << endl;
-	}
+	srcRect.x = 0;
+	srcRect.y = 0;
+	srcRect.w = 32;
+	srcRect.h = 32;
 }
 
 GameObject::~GameObject()
@@ -118,6 +121,7 @@ void GameObject::MoveUp(float deltaTime)
 {
 	if (m_move_up)
 	{
+		m_facing_direction = FACING_UP;
 		m_position.y += deltaTime * 100;
 	}
 }
@@ -126,6 +130,7 @@ void GameObject::MoveLeft(float deltaTime)
 {
 	if (m_move_left)
 	{
+		m_facing_direction = FACING_LEFT;
 		m_position.x += deltaTime * 100;
 	}
 }
@@ -134,6 +139,7 @@ void GameObject::MoveDown(float deltaTime)
 {
 	if (m_move_down)
 	{
+		m_facing_direction = FACING_DOWN;
 		m_position.y -= deltaTime * 100;
 	}
 }
@@ -142,6 +148,7 @@ void GameObject::MoveRight(float deltaTime)
 {
 	if (m_move_right)
 	{
+		m_facing_direction = FACING_RIGHT;
 		m_position.x -= deltaTime * 100;
 	}
 }

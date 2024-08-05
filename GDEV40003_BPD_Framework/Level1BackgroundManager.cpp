@@ -1,4 +1,6 @@
 #include "Level1BackgroundManager.h"
+#include "Texture2D.h"
+#include "Constants.h"
 
 int Level1[30][35] = {
 	{2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,8},
@@ -34,7 +36,7 @@ int Level1[30][35] = {
 
 };
 
-Level1BackgroundManager::Level1BackgroundManager(SDL_Renderer* renderer) : TileMap(renderer)
+Level1BackgroundManager::Level1BackgroundManager(SDL_Renderer* renderer, Vector2D start_position) : GameObject(renderer, start_position)
 {
 	//Initialising Movment variable
 	m_is_moving = true;
@@ -65,8 +67,8 @@ void Level1BackgroundManager::LoadTileMap(int arr[30][35])
 		for (int column = 0; column < 35; column++)
 		{
 			m_tile_map[row][column].type = arr[row][column];
-			m_tile_map[row][column].x = (column + 5) * 32;
-			m_tile_map[row][column].y = (row + 5) * 32;
+			m_tile_map[row][column].x = (column + 5) * 31;
+			m_tile_map[row][column].y = (row + 5) * 31;
 		}
 	}
 }

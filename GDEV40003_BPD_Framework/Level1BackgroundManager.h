@@ -1,14 +1,13 @@
 #pragma once
-#include "TileMap.h"
-#include "Commons.h"
+#include "GameObject.h"
 
-class Level1BackgroundManager : public TileMap
+class Level1BackgroundManager : public GameObject
 {
 public:
-	Level1BackgroundManager(SDL_Renderer* renderer);
+	Level1BackgroundManager(SDL_Renderer* renderer, Vector2D start_position);
 	~Level1BackgroundManager();
 
-	void LoadTileMap(int arr[30][35]) override;
+	void LoadTileMap(int arr[30][35]);
 	void Render() override;
 	void Update(float deltaTime, SDL_Event e) override;
 

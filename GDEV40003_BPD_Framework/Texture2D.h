@@ -15,7 +15,7 @@ public:
 	SDL_Texture* LoadFromFileBackground(std::string path);
 	void Free();
 	void Render(Vector2D new_position, SDL_RendererFlip flip, double angle);
-	void RenderCenter(Vector2D new_position, SDL_RendererFlip flip, double angle);
+	void RenderCenter(SDL_Texture* texture, SDL_Rect srcRect, Vector2D new_position);
 
 	void RenderBackground(SDL_Texture* texture, SDL_Rect srcRect, Vector2D new_position);
 

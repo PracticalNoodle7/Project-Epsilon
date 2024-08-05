@@ -10,7 +10,7 @@ class Texture2D;
 class GameObject
 {
 public:
-	GameObject(SDL_Renderer* renderer, string imagePath, Vector2D start_position);
+	GameObject(SDL_Renderer* renderer, Vector2D start_position);
 	~GameObject();
 
 	virtual void Render();
@@ -22,6 +22,8 @@ public:
 protected:
 	SDL_Renderer* m_renderer;
 	Texture2D* m_texture;
+	SDL_Rect srcRect;
+	FACING m_facing_direction;
 
 	//Movment variable
 	bool m_is_moving;

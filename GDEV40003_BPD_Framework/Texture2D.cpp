@@ -56,37 +56,42 @@ bool Texture2D::LoadFromFile(string path)
 
 SDL_Texture* Texture2D::LoadFromFileBackground(std::string path)
 {
-	//remove memory used for a previouse texture
-	//Free();
+	// Remove memory used for a previous texture
+	// Free(); // Uncomment if Free() is implemented to handle old textures
 
-	//Load the image
+	// Load the image
 	SDL_Surface* p_surface = IMG_Load(path.c_str());
-	if (p_surface != nullptr)
+	if (p_surface == nullptr)
 	{
-		//colour key the image to be transparent
-		SDL_SetColorKey(p_surface, SDL_TRUE, SDL_MapRGB(p_surface->format, 0, 0XFF, 0XFF));
+		std::cout << "Unable to load image. Error: " << IMG_GetError() << std::endl;
+		return nullptr;
+	}
 
-		//create the texture from the pixels on the surface
-		m_tile_map_texture = SDL_CreateTextureFromSurface(m_renderer, p_surface);
-		if (m_tile_map_texture == nullptr)
-		{
-			cout << "Unable to create texture from surface. Error: " << SDL_GetError();
-		}
-		else
-		{
-			m_width = p_surface->w;
-			m_height = p_surface->h;
-		}
-		//remove the loaded surface now that we have a texture
+	// Color key the image to be transparent
+	if (SDL_SetColorKey(p_surface, SDL_TRUE, SDL_MapRGB(p_surface->format, 0, 0xFF, 0xFF)) != 0)
+	{
+		std::cout << "Unable to set color key. Error: " << SDL_GetError() << std::endl;
 		SDL_FreeSurface(p_surface);
+		return nullptr;
+	}
+
+	// Create the texture from the pixels on the surface
+	SDL_Texture* new_texture = SDL_CreateTextureFromSurface(m_renderer, p_surface);
+	if (new_texture == nullptr)
+	{
+		std::cout << "Unable to create texture from surface. Error: " << SDL_GetError() << std::endl;
 	}
 	else
 	{
-		cout << "Unable to create texture from surface. Error: " << IMG_GetError();
+		m_width = p_surface->w;
+		m_height = p_surface->h;
 	}
 
-	//return the texture
-	return m_tile_map_texture;
+	// Remove the loaded surface now that we have a texture
+	SDL_FreeSurface(p_surface);
+
+	// Return the texture
+	return new_texture;
 }
 
 void Texture2D::Free()
@@ -110,7 +115,7 @@ void Texture2D::Render(Vector2D new_position, SDL_RendererFlip flip, double angl
 	SDL_RenderCopyEx(m_renderer, m_texture, nullptr, &renderLocation, angle, nullptr, flip);
 }
 
-void Texture2D::RenderCenter(Vector2D new_position, SDL_RendererFlip flip, double angle)
+void Texture2D::RenderCenter(SDL_Texture* texture, SDL_Rect srcRect, Vector2D new_position)
 {
 	//Set to the center of the texture
 	SDL_Point center = { m_width / 2, m_height / 2 };
@@ -119,7 +124,7 @@ void Texture2D::RenderCenter(Vector2D new_position, SDL_RendererFlip flip, doubl
 	SDL_Rect renderLocation = { (new_position.x - center.x), (new_position.y - center.y), m_width, m_height };
 
 	//Render to screen
-	SDL_RenderCopyEx(m_renderer, m_texture, nullptr, &renderLocation, angle, &center, flip);
+	//SDL_RenderCopyEx(m_renderer, m_texture, nullptr, &renderLocation, angle, &center,);
 }
 
 void Texture2D::RenderBackground(SDL_Texture* texture, SDL_Rect srcRect, Vector2D new_position)
