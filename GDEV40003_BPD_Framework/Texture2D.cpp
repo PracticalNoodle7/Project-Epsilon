@@ -1,5 +1,6 @@
 #include "Texture2D.h"
 #include "SDL_image.h"
+#include "Constants.h"
 #include <iostream>
 using namespace std;
 
@@ -37,6 +38,11 @@ bool Texture2D::LoadFromFile(string path)
 		if (m_texture == nullptr)
 		{
 			cout << "Unable to create texture from surface. Error: " << SDL_GetError();
+		}
+		else if (path == "images/Inventory/InventoryPannel1.png")
+		{
+			m_width = SCREEN_WIDTH - 200;
+			m_height = SCREEN_HEIGHT - 200;
 		}
 		else
 		{
@@ -113,18 +119,6 @@ void Texture2D::Render(Vector2D new_position, SDL_RendererFlip flip, double angl
 
 	//Render to screen
 	SDL_RenderCopyEx(m_renderer, m_texture, nullptr, &renderLocation, angle, nullptr, flip);
-}
-
-void Texture2D::RenderCenter(SDL_Texture* texture, SDL_Rect srcRect, Vector2D new_position)
-{
-	//Set to the center of the texture
-	SDL_Point center = { m_width / 2, m_height / 2 };
-
-	//Set where to render the texture
-	SDL_Rect renderLocation = { (new_position.x - center.x), (new_position.y - center.y), m_width, m_height };
-
-	//Render to screen
-	//SDL_RenderCopyEx(m_renderer, m_texture, nullptr, &renderLocation, angle, &center,);
 }
 
 void Texture2D::Render(SDL_Texture* texture, SDL_Rect srcRect, Vector2D new_position)
