@@ -38,14 +38,6 @@ int Level1[30][35] = {
 
 Level1BackgroundManager::Level1BackgroundManager(SDL_Renderer* renderer, Vector2D start_position) : GameObject(renderer, start_position)
 {
-	//Initialising Movment variable
-	m_is_moving = true;
-	m_move_up = false;
-	m_move_left = false;
-	m_move_down = false;
-	m_move_right = false;
-	m_acceleration = 5;
-
 	if (m_texture != nullptr)
 	{
 		m_grass = m_texture->LoadFromFileBackground("images/Overworld_Tile/Grass_TileMap.png");
@@ -129,23 +121,31 @@ void Level1BackgroundManager::Render()
 
 void Level1BackgroundManager::Update(float deltaTime, SDL_Event e)
 {
-	if (m_is_moving)
+	if (m_can_move)
 	{
 		if (m_move_up)
 		{
+			m_is_moving = true;
 			MoveUp(deltaTime);
 		}
 		else if (m_move_left)
 		{
+			m_is_moving = true;
 			MoveLeft(deltaTime);
 		}
 		else if (m_move_down)
 		{
+			m_is_moving = true;
 			MoveDown(deltaTime);
 		}
 		else if (m_move_right)
 		{
+			m_is_moving = true;
 			MoveRight(deltaTime);
+		}
+		else
+		{
+			m_is_moving = false;
 		}
 
 		//handle the events
@@ -207,6 +207,7 @@ void Level1BackgroundManager::MoveUp(float deltaTime)
 {
 	if (m_move_up)
 	{
+		ChangeFacingDirection(FACING_UP);
 		for (int row = 0; row < 30; row++)
 		{
 			for (int column = 0; column < 35; column++)
@@ -221,6 +222,7 @@ void Level1BackgroundManager::MoveLeft(float deltaTime)
 {
 	if (m_move_left)
 	{
+		ChangeFacingDirection(FACING_LEFT);
 		for (int row = 0; row < 30; row++)
 		{
 			for (int column = 0; column < 35; column++)
@@ -235,6 +237,7 @@ void Level1BackgroundManager::MoveDown(float deltaTime)
 {
 	if (m_move_down)
 	{
+		ChangeFacingDirection(FACING_DOWN);
 		for (int row = 0; row < 30; row++)
 		{
 			for (int column = 0; column < 35; column++)
@@ -249,6 +252,7 @@ void Level1BackgroundManager::MoveRight(float deltaTime)
 {
 	if (m_move_right)
 	{
+		ChangeFacingDirection(FACING_RIGHT);
 		for (int row = 0; row < 30; row++)
 		{
 			for (int column = 0; column < 35; column++)

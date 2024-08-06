@@ -5,8 +5,11 @@
 Character::Character(SDL_Renderer* renderer, Vector2D start_position) : GameObject(renderer, start_position)
 {
 	//initialising moving variables
-	previousPosition = start_position;
-	m_is_moving = false;
+	m_can_move = false;
+
+	m_frame_time = 0;
+	m_frame_delay = 0.1;
+	m_current_frame = 0;
 
 	//load texture
 	if (m_texture != nullptr)
@@ -35,28 +38,50 @@ Character::~Character()
 
 void Character::Render()
 {
+	srcRect.x = m_current_frame * 32;
+	srcRect.y = 0;
+
 	//draw the Character
 	if (m_facing_direction == FACING_RIGHT)
 	{
-		srcRect.x = 0, srcRect.y = 0;
 		m_texture->RenderBackground(m_character_right, srcRect, Vector2D(m_position.x, m_position.y));
 	}
 	else if (m_facing_direction == FACING_LEFT)
 	{
-		srcRect.x = 0, srcRect.y = 0;
 		m_texture->RenderBackground(m_character_left, srcRect, Vector2D(m_position.x, m_position.y));
 	}
 	else if (m_facing_direction == FACING_DOWN)
 	{
-		srcRect.x = 0, srcRect.y = 0;
 		m_texture->RenderBackground(m_character_down, srcRect, Vector2D(m_position.x, m_position.y));
 	}
 	else if (m_facing_direction == FACING_UP)
 	{
-		srcRect.x = 0, srcRect.y = 0;
 		m_texture->RenderBackground(m_character_up, srcRect, Vector2D(m_position.x, m_position.y));
 	}
 
+}
+
+void Character::Update(float deltaTime, SDL_Event e)
+{
+	if (GameObject::m_is_moving)
+	{
+		m_frame_time += deltaTime;
+
+		if (m_frame_time >= m_frame_delay)
+		{
+			m_frame_time = 0;
+			m_current_frame++;
+
+			if (m_current_frame >= m_num_of_frames)
+			{
+				m_current_frame = 0;
+			}
+		}
+	}
+	else
+	{
+		m_current_frame = 0;
+	}
 }
 
 

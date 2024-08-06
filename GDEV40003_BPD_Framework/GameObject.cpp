@@ -1,18 +1,21 @@
 #include "GameObject.h"
 #include "Texture2D.h"
 
+FACING GameObject::m_facing_direction = FACING::FACING_RIGHT;
+bool GameObject::m_is_moving;
+
 GameObject::GameObject(SDL_Renderer* renderer, Vector2D start_position)
 {
-	m_facing_direction = FACING_LEFT;
-
 	m_renderer = renderer;
 	m_position = start_position;
+	previousPosition = start_position;
 
 	//load texture
 	m_texture = new Texture2D(m_renderer);
 
 	//Initialising Movment variable
-	m_is_moving = true;
+	m_can_move = true;
+	m_is_moving = false;
 	m_move_up = false;
 	m_move_left = false;
 	m_move_down = false;
@@ -38,7 +41,7 @@ void  GameObject::Render()
 
 void GameObject::Update(float deltaTime, SDL_Event e)
 {
-	if (m_is_moving)
+	if (m_can_move)
 	{
 		if (m_move_up)
 		{
@@ -67,21 +70,25 @@ void GameObject::Update(float deltaTime, SDL_Event e)
 				//Press W to move up
 			case SDLK_w:
 				m_move_up = true;
+				m_is_moving = true;
 				break;
 
 				//Press A to move left
 			case SDLK_a:
 				m_move_left = true;
+				m_is_moving = true;
 				break;
 
 				//Press S to move down
 			case SDLK_s:
 				m_move_down = true;
+				m_is_moving = true;
 				break;
 
 				//Press D to move right
 			case SDLK_d:
 				m_move_right = true;
+				m_is_moving = true;
 				break;
 			}
 			break;
@@ -91,21 +98,25 @@ void GameObject::Update(float deltaTime, SDL_Event e)
 				//Check if w is up
 			case SDLK_w:
 				m_move_up = false;
+				m_is_moving = false;
 				break;
 
 				//Check if a is up
 			case SDLK_a:
 				m_move_left = false;
+				m_is_moving = false;
 				break;
 
 				//Check if s is up
 			case SDLK_s:
 				m_move_down = false;
+				m_is_moving = false;
 				break;
 
 				//Check if d is up
 			case SDLK_d:
 				m_move_right = false;
+				m_is_moving = false;
 				break;
 			}
 		}
