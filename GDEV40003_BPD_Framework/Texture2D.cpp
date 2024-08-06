@@ -54,7 +54,7 @@ bool Texture2D::LoadFromFile(string path)
 	return m_texture != nullptr;
 }
 
-SDL_Texture* Texture2D::LoadFromFileBackground(std::string path)
+SDL_Texture* Texture2D::LoadFromTileMap(std::string path)
 {
 	// Remove memory used for a previous texture
 	// Free(); // Uncomment if Free() is implemented to handle old textures
@@ -127,7 +127,7 @@ void Texture2D::RenderCenter(SDL_Texture* texture, SDL_Rect srcRect, Vector2D ne
 	//SDL_RenderCopyEx(m_renderer, m_texture, nullptr, &renderLocation, angle, &center,);
 }
 
-void Texture2D::RenderBackground(SDL_Texture* texture, SDL_Rect srcRect, Vector2D new_position)
+void Texture2D::Render(SDL_Texture* texture, SDL_Rect srcRect, Vector2D new_position)
 {
 	//Set where to render the texture
 	SDL_Rect renderLocation = { new_position.x, new_position.y, srcRect.w, srcRect.h };
@@ -136,22 +136,3 @@ void Texture2D::RenderBackground(SDL_Texture* texture, SDL_Rect srcRect, Vector2
 
 	SDL_RenderCopy(m_renderer, texture, &renderImage, &renderLocation);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

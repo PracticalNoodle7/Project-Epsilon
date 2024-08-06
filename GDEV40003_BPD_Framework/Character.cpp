@@ -14,10 +14,10 @@ Character::Character(SDL_Renderer* renderer, Vector2D start_position) : GameObje
 	//load texture
 	if (m_texture != nullptr)
 	{
-		m_character_left = m_texture->LoadFromFileBackground("images/Character/Character_Left.png");
-		m_character_right = m_texture->LoadFromFileBackground("images/Character/Character_Right.png");
-		m_character_down = m_texture->LoadFromFileBackground("images/Character/Character_Down.png");
-		m_character_up = m_texture->LoadFromFileBackground("images/Character/Character_Up.png");
+		m_character_left = m_texture->LoadFromTileMap("images/Character/Character_Left.png");
+		m_character_right = m_texture->LoadFromTileMap("images/Character/Character_Right.png");
+		m_character_down = m_texture->LoadFromTileMap("images/Character/Character_Down.png");
+		m_character_up = m_texture->LoadFromTileMap("images/Character/Character_Up.png");
 	}
 }
 
@@ -44,19 +44,19 @@ void Character::Render()
 	//draw the Character
 	if (m_facing_direction == FACING_RIGHT)
 	{
-		m_texture->RenderBackground(m_character_right, srcRect, Vector2D(m_position.x, m_position.y));
+		m_texture->Render(m_character_right, srcRect, Vector2D(m_position.x, m_position.y));
 	}
 	else if (m_facing_direction == FACING_LEFT)
 	{
-		m_texture->RenderBackground(m_character_left, srcRect, Vector2D(m_position.x, m_position.y));
+		m_texture->Render(m_character_left, srcRect, Vector2D(m_position.x, m_position.y));
 	}
 	else if (m_facing_direction == FACING_DOWN)
 	{
-		m_texture->RenderBackground(m_character_down, srcRect, Vector2D(m_position.x, m_position.y));
+		m_texture->Render(m_character_down, srcRect, Vector2D(m_position.x, m_position.y));
 	}
 	else if (m_facing_direction == FACING_UP)
 	{
-		m_texture->RenderBackground(m_character_up, srcRect, Vector2D(m_position.x, m_position.y));
+		m_texture->Render(m_character_up, srcRect, Vector2D(m_position.x, m_position.y));
 	}
 
 }

@@ -40,7 +40,7 @@ Level1BackgroundManager::Level1BackgroundManager(SDL_Renderer* renderer, Vector2
 {
 	if (m_texture != nullptr)
 	{
-		m_grass = m_texture->LoadFromFileBackground("images/Overworld_Tile/Grass_TileMap.png");
+		m_grass = m_texture->LoadFromTileMap("images/Overworld_Tile/Grass_TileMap.png");
 	}
 
 	LoadTileMap(Level1);
@@ -80,39 +80,39 @@ void Level1BackgroundManager::Render()
 			{
 			case 0:
 				srcRect.x = 32, srcRect.y = 32;
-				m_texture->RenderBackground(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
 				break;
 			case 1:
 				srcRect.x = 32, srcRect.y = 0;
-				m_texture->RenderBackground(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
 				break;
 			case 2:
 				srcRect.x = 0, srcRect.y = 0;
-				m_texture->RenderBackground(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
 				break;
 			case 3:
 				srcRect.x = 0, srcRect.y = 32;
-				m_texture->RenderBackground(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
 				break;
 			case 4:
 				srcRect.x = 0, srcRect.y = 64;
-				m_texture->RenderBackground(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
 				break;
 			case 5:
 				srcRect.x = 32, srcRect.y = 64;
-				m_texture->RenderBackground(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
 				break;
 			case 6:
 				srcRect.x = 64, srcRect.y = 64;
-				m_texture->RenderBackground(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
 				break;
 			case 7:
 				srcRect.x = 64, srcRect.y = 32;
-				m_texture->RenderBackground(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
 				break;
 			case 8:
 				srcRect.x = 64, srcRect.y = 0;
-				m_texture->RenderBackground(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
 				break;
 			}
 		}
@@ -199,6 +199,14 @@ void Level1BackgroundManager::Update(float deltaTime, SDL_Event e)
 				m_move_right = false;
 				break;
 			}
+		//case SDL_MOUSEBUTTONDOWN:
+
+		//	switch (e.button.state)
+		//	{
+		//	case SDL_BUTTON_LEFT:
+		//		cout << "Left button pressed" << endl;
+		//	}
+		//	break;
 		}
 	}
 }
