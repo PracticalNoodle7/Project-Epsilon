@@ -1,4 +1,7 @@
 #pragma once
+#include <string>
+using namespace std;
+
 struct Vector2D
 {
 	float x;
@@ -76,5 +79,12 @@ struct Tile
 	int type;
 	float x, y;
 
+};
+
+struct Slots
+{
+	int type;
+	float x, y;
+	string category;
 };
 

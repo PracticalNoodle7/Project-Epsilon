@@ -5,44 +5,57 @@
 //initialise instance to nullptr
 InventoryManager* InventoryManager::m_instance = nullptr;
 
+//initialising the slot arrays
+int InventorySlot[10][15] = {
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+};
+int EquipmentSlot[3][2] = {
+	{0,0},
+	{0,0},
+	{0,0}
+};
+string categories[3][2] = {
+	{"weapon", "armor"},
+	{"shield", "helmet"},
+	{"potion", "amulet"}
+};
+
 InventoryManager::InventoryManager(SDL_Renderer* renderer)
 {
 	m_renderer = renderer;
-	imagePath = "images/Inventory/EmptySlot.png";
-	EmptyImage = "images/Inventory/EmptySlot.png";
 	m_is_inventory_open = false;
-	m_loaded = false;
-
-	//load base inv texture
-	baseImage = new Texture2D(m_renderer);
-	if (!baseImage->LoadFromFile(imagePath))
-	{
-		cout << "Failed to load Inventory slots texture!" << endl;
-	}
 
 	//load new inv texture
-	itemImage = new Texture2D(m_renderer);
-	if (!itemImage->LoadFromFile(imagePath))
+	m_texture = new Texture2D(m_renderer);
+	if (m_texture != nullptr)
 	{
-		cout << "Failed to load Item slot texture! " << endl;
+		m_empty_slot = m_texture->LoadFromTileMap("images/Inventory/EmptySlot.png");
+		m_Inv_back_panel = m_texture->LoadFromTileMap("images/Inventory/Inventory_back_panel.png");
 	}
 
-	//my_items = new ItemManager(m_renderer, "images/1Tiles/Tile_51.png", Vector2D(0, 0));
+	LoadInventory(InventorySlot);
+	LoadEquip(EquipmentSlot);
 }
 
 InventoryManager::~InventoryManager()
 {
-	delete baseImage;
-	baseImage = nullptr;
-
-	delete itemImage;
-	itemImage = nullptr;
-
-	delete my_items;
-	my_items = nullptr;
-
 	m_renderer = nullptr;
 	m_instance = nullptr;
+
+	delete m_empty_slot;
+	m_empty_slot = nullptr;
+
+	delete m_Inv_back_panel;
+	m_Inv_back_panel = nullptr;
 }
 
 InventoryManager* InventoryManager::Instance(SDL_Renderer* renderer)
@@ -56,200 +69,83 @@ InventoryManager* InventoryManager::Instance(SDL_Renderer* renderer)
 }
 
 void InventoryManager::Render()
-{	
-	if (imagePath != EmptyImage) 
-	{
-		itemImage = new Texture2D(m_renderer);
-		if (!itemImage->LoadFromFile(this->imagePath))
-		{
-			cout << "Failed to load Item slot texture! " << endl;
-		}
-
-		itemImage->Render(m_position, SDL_FLIP_NONE, 0.0);
-	}
-	else 
-	{	
-		//if no item render base else render item image
-		baseImage->Render(m_position, SDL_FLIP_NONE, 0.0);
-	}
-}
-
-void InventoryManager::CallInventoryRenderer()
 {
-	for (InventoryManager* Inv_pannel : my_back_pannel)
+	srcRect.x = srcRect.y = 0;
+	srcRect.w = 1100;
+	srcRect.h = 600;
+	m_texture->Render(m_Inv_back_panel, srcRect, Vector2D(80, 65));
+
+	for (int row = 0; row < 10; row++)
 	{
-		Inv_pannel->Render();
+		for (int column = 0; column < 15; column++)
+		{
+			m_position.x = m_inv_slot[row][column].x;
+			m_position.y = m_inv_slot[row][column].y;
+
+
+			switch (m_inv_slot[row][column].type)
+			{
+			case 0:
+				srcRect.x = 0, srcRect.y = 0, srcRect.w = 32, srcRect.h = 32;
+				m_texture->Render(m_empty_slot, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_empty_slot, srcRect, Vector2D(m_position.x, m_position.y));
+				break;
+			}
+		}
 	}
 
-	for (InventoryManager* Inv_slots : my_inv_slots)
+	for (int row = 0; row < 3; row++)
 	{
-		Inv_slots->Render();
-	}
+		for (int column = 0; column < 2; column++)
+		{
+			m_position.x = m_equip_slot[row][column].x;
+			m_position.y = m_equip_slot[row][column].y;
 
-	for (InventoryManager* Equip_slots : my_equip_slots)
-	{
-		Equip_slots->Render();
+
+			switch (m_equip_slot[row][column].type)
+			{
+			case 0:
+				srcRect.x = 0, srcRect.y = 0, srcRect.w = 64, srcRect.h = 64;
+				m_texture->Render(m_empty_slot, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_empty_slot, srcRect, Vector2D(m_position.x, m_position.y));
+				break;
+			}
+		}
 	}
 }
 
-void InventoryManager::LoadInventory()
+void InventoryManager::LoadInventory(int arr[10][15])
 {
-	if (!m_loaded)
+	for (int row = 0; row < 10; row++)
 	{
-		LoadBackPanel();
-		LoadInvSlots();
-		m_loaded = true;
+		for (int column = 0; column < 15; column++)
+		{
+			m_inv_slot[row][column].type = arr[row][column];
+			m_inv_slot[row][column].x = (column + 13) * 40;
+			m_inv_slot[row][column].y = (row + 3) * 40;
+		}
 	}
 }
 
-void InventoryManager::LoadBackPanel()
+void InventoryManager::LoadEquip(int arr[3][2])
 {
-	InventoryManager* Inv_pannel = new InventoryManager(m_renderer);
-	Inv_pannel->SetPosition(Vector2D(100, 125));
-	Inv_pannel->SetImagePath("images/Inventory/InventoryPannel1.png");
-	my_back_pannel.push_back(Inv_pannel);
-	
-	for (int i = 0; i < 25; ++i)
+	for (int row = 0; row < 3; row++)
 	{
-		// Render inventory slots
-		InventoryManager* Inv_pannel = new InventoryManager(m_renderer);
-
-		// Set position for each slot
-		if (i < 8)
+		for (int column = 0; column < 2; column++)
 		{
-			Inv_pannel->SetPosition(Vector2D(500 + i * 80, 190));
+			m_equip_slot[row][column].type = arr[row][column];
+			m_equip_slot[row][column].x = (column + 1.5) * 100;
+			m_equip_slot[row][column].y = (row + 1.75) * 70;
+			m_equip_slot[row][column].category = m_categories[row][column];
 		}
-		else if (i < 16)
-		{
-			Inv_pannel->SetPosition(Vector2D(500 + (i - 8) * 80, 270));
-		}
-		else if (i < 24)
-		{
-			Inv_pannel->SetPosition(Vector2D(500 + (i - 16) * 80, 350));
-		}
-		else if (i < 32)
-		{
-			Inv_pannel->SetPosition(Vector2D(500 + (i - 24) * 80, 430));
-		}
-		else
-		{
-			Inv_pannel->SetPosition(Vector2D(500 + (i - 32) * 80, 510));
-		}
-
-		my_back_pannel.push_back(Inv_pannel);
-	}
-
-	for (int i = 0; i < 6; ++i)
-	{
-		InventoryManager* Inv_pannel = new InventoryManager(m_renderer);
-
-		if (i < 2)
-		{
-			Inv_pannel->SetPosition(Vector2D(175 + i * 200, 190));
-		}
-		else if (i < 4)
-		{
-			Inv_pannel->SetPosition(Vector2D(175 + (i - 2) * 200, 270));
-		}
-		else
-		{
-			Inv_pannel->SetPosition(Vector2D(175 + (i - 4) * 200, 350));
-		}
-	 
-		my_back_pannel.push_back(Inv_pannel);
-	}
-
-}
-
-void InventoryManager::LoadInvSlots()
-{
-	for (int i = 0; i < 40; ++i)
-	{
-		// Render inventory slots
-		InventoryManager* Inv_slots = new InventoryManager(m_renderer);
-
-		// Set position for each slot
-		if (i < 8)
-		{
-			Inv_slots->SetPosition(Vector2D(500 + i * 80, 190));
-		}
-		else if (i < 16)
-		{
-			Inv_slots->SetPosition(Vector2D(500 + (i - 8) * 80, 270));
-		}
-		else if (i < 24)
-		{
-			Inv_slots->SetPosition(Vector2D(500 + (i - 16) * 80, 350));
-		}
-		else if (i < 32)
-		{
-			Inv_slots->SetPosition(Vector2D(500 + (i - 24) * 80, 430));
-		}
-		else
-		{
-			Inv_slots->SetPosition(Vector2D(500 + (i - 32) * 80, 510));
-		}
-	
-		my_inv_slots.push_back(Inv_slots);
-	}
-
-	for (int i = 0; i < 6; ++i)
-	{
-		InventoryManager* Equip_slots = new InventoryManager(m_renderer);
-
-		if (i == 0)
-		{
-			Equip_slots->SetPosition(Vector2D(175, 190));
-			Equip_slots->SetSlotType("armor");
-		}
-		if (i == 1)
-		{
-			Equip_slots->SetPosition(Vector2D(375, 190));
-			Equip_slots->SetSlotType("weapon");
-		}
-		if (i == 2)
-		{
-			Equip_slots->SetPosition(Vector2D(175, 270));
-			Equip_slots->SetSlotType("shield");
-		}
-		if (i == 3)
-		{
-			Equip_slots->SetPosition(Vector2D(375, 270));
-			Equip_slots->SetSlotType("relic");
-		}
-		if (i == 4)
-		{
-			Equip_slots->SetPosition(Vector2D(175, 350));
-			Equip_slots->SetSlotType("ability");
-		}
-		if (i == 5)
-		{
-			Equip_slots->SetPosition(Vector2D(375, 350));
-			Equip_slots->SetSlotType("consumable");
-		}
-
-		my_equip_slots.push_back(Equip_slots);
 	}
 }
-
-//void InventoryManager::SetStatsText()
-//{
-//	m_gameText->SetColor({ 255, 255, 255, 255 });
-//
-//	m_gameText->RenderTextAt("Damage: ", 200, 400);
-//	m_gameText->RenderNumberAt(GetPlayerAttackDamage(), 290, 400);
-//
-//	m_gameText->RenderTextAt("Defence: ", 200, 425);
-//	m_gameText->RenderNumberAt((GetShieldDefence()), 290, 425);
-//
-//	m_gameText->RenderTextAt("Health: ", 200, 450);
-//	//m_gameText->RenderNumberAt(m_character->GetCharacterHealth(), 290, 450);
-//}
 
 void InventoryManager::Update(float deltaTime, SDL_Event e)
 {
 	switch (e.type)
 	{
+		//Detecting if a keyboard button is down
 	case SDL_KEYDOWN:
 		switch (e.key.keysym.sym)
 		{
@@ -265,140 +161,21 @@ void InventoryManager::Update(float deltaTime, SDL_Event e)
 			}
 			break;
 		}
-		break;
-	case SDL_JOYBUTTONDOWN:
-		switch (e.jbutton.button)
+
+		//Detecting if the mouse button is down
+	case SDL_MOUSEBUTTONDOWN:
+		switch (e.button.state)
 		{
-		case 3:
+		case SDL_BUTTON_LEFT:
 			if (m_is_inventory_open)
 			{
-				m_is_inventory_open = false;
-			}
-			else
-			{
-				m_is_inventory_open = true;
+				cout << "Left button pressed" << endl;
 			}
 			break;
 		}
+
 	}
-}
-
-void InventoryManager::SetPosition(Vector2D new_position)
-{
-	m_position = new_position;
-}
-
-void InventoryManager::SetSlotType(string SlotType)
-{
-	m_slot_type = SlotType;
-}
-
-bool InventoryManager::AddItemToInventory(string imagePath)
-{
-	// Check if the item is already in the inventory
-	for (InventoryManager* Inv_slots : my_inv_slots)
-	{
-		//avoid duplicate items
-		if (Inv_slots->GetImagePath() == imagePath)
-		{
-			return true;
-		}
-	}
-	
-	// Item not found in inventory, find an empty slot and add it
-	for (InventoryManager* Inv_slots : my_inv_slots)
-	{
-		if (Inv_slots->IsEmpty())
-		{
-			// Empty slot found, add the item
-			Inv_slots->SetImagePath(imagePath);
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool InventoryManager::AddItemToEquipSlot(string imagePath)
-{
-	// Check if the item is already in the inventory
-	for (InventoryManager* Equip_slots : my_equip_slots)
-	{
-		if (Equip_slots->GetImagePath() == imagePath)
-		{
-			return true;
-		}
-	}
-
-	// Item not found in inventory, find an empty slot and add it
-	for (InventoryManager* Equip_slots : my_equip_slots)
-	{
-		if (Equip_slots->IsEmpty() && Equip_slots->GetType() == my_items->GetItemType(imagePath))
-		{
-			//Empty slot found, add the item
-			Equip_slots->SetImagePath(imagePath);
-
-			if (Equip_slots->GetType() == "armor")
-			{
-				//m_character->IncreaseCharacterHealth();
-			}
-			return true;
-		}
-	}
-	return false;
-}
-
-void InventoryManager::ResetInvSlot(int Slot)
-{
-	my_inv_slots[Slot]->imagePath = EmptyImage;
-}
-
-void InventoryManager::ResetEquipSlot(int Slot)
-{
-	my_equip_slots[Slot]->imagePath = EmptyImage;
-}
-
-int InventoryManager::GetPlayerAttackDamage()
-{
-	for (InventoryManager* Equip_slots : my_equip_slots)
-	{
-		if (Equip_slots->GetType() == "weapon")
-		{
-			return my_items->GetItemDamage(Equip_slots->GetImagePath());
-
-		}
-	}
-}
-
-int InventoryManager::GetPlayerUpdatedHealth()
-{
-	for (InventoryManager* Equip_slots : my_equip_slots)
-	{
-		if (Equip_slots->GetType() == "armor")
-		{
-			return my_items->GetItemDefence(Equip_slots->GetImagePath());
-		}
-	}
-}
-
-int InventoryManager::GetShieldDefence()
-{
-	for (InventoryManager* Equip_slots : my_equip_slots)
-	{
-		if (Equip_slots->GetType() == "shield")
-		{
-			return my_items->GetItemDefence(Equip_slots->GetImagePath());
-		}
-	}
-} 
-
-int InventoryManager::GetConsumableAmount()
-{
-	for (InventoryManager* Equip_slots : my_equip_slots)
-	{
-		if (Equip_slots->GetType() == "consumable")
-		{
-			return my_items->GetItemConsumable(Equip_slots->GetImagePath());
-		}
-	}
+	// Variables to hold the mouse position
+	int x, y;
+	SDL_GetMouseState(&x, &y);
 }

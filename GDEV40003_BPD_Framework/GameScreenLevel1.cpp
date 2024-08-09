@@ -27,19 +27,19 @@ void GameScreenLevel1::Render()
 
 	if (InventoryManager::Instance(m_renderer)->m_is_inventory_open)
 	{
-		InventoryManager::Instance(m_renderer)->CallInventoryRenderer();
+		InventoryManager::Instance(m_renderer)->Render();
 	}
 }
 
 void GameScreenLevel1::Update(float deltaTime, SDL_Event e)
 {
-	//update the character
-	m_background->Update(deltaTime, e);
 
 	//Update player and attack when shop and inventory are not open
 	if (!InventoryManager::Instance(m_renderer)->m_is_inventory_open)
 	{
+		//Update character and background
 		m_character->Update(deltaTime, e);
+		m_background->Update(deltaTime, e);
 	}
 
 	//Update inventory
@@ -48,10 +48,9 @@ void GameScreenLevel1::Update(float deltaTime, SDL_Event e)
 
 bool GameScreenLevel1::SetUpLevel1()
 {
-	//set up player character
+	//set up player character and background
 	m_background = new Level1BackgroundManager(m_renderer, Vector2D());
 	m_character = new Character(m_renderer, Vector2D(640, 360));
-	InventoryManager::Instance(m_renderer)->LoadInventory();
 
 	return true;
 }

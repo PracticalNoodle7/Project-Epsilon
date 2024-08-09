@@ -71,7 +71,6 @@ void Level1BackgroundManager::Render()
 	{
 		for (int column = 0; column < 35; column++)
 		{
-			m_tile_map[row][column].type;
 			m_position.x = m_tile_map[row][column].x;
 			m_position.y = m_tile_map[row][column].y;
 
@@ -199,14 +198,6 @@ void Level1BackgroundManager::Update(float deltaTime, SDL_Event e)
 				m_move_right = false;
 				break;
 			}
-		//case SDL_MOUSEBUTTONDOWN:
-
-		//	switch (e.button.state)
-		//	{
-		//	case SDL_BUTTON_LEFT:
-		//		cout << "Left button pressed" << endl;
-		//	}
-		//	break;
 		}
 	}
 }
