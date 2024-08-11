@@ -3,6 +3,7 @@
 
 FACING GameObject::m_facing_direction = FACING::FACING_RIGHT;
 bool GameObject::m_is_moving;
+bool GameObject::m_can_move;
 
 GameObject::GameObject(SDL_Renderer* renderer, Vector2D start_position)
 {
@@ -132,7 +133,7 @@ void GameObject::MoveUp(float deltaTime)
 {
 	if (m_move_up)
 	{
-		m_facing_direction = FACING_UP;
+		m_facing_direction = FACING::FACING_UP;
 		m_position.y += deltaTime * 100;
 	}
 }
@@ -141,7 +142,7 @@ void GameObject::MoveLeft(float deltaTime)
 {
 	if (m_move_left)
 	{
-		m_facing_direction = FACING_LEFT;
+		m_facing_direction = FACING::FACING_LEFT;
 		m_position.x += deltaTime * 100;
 	}
 }
@@ -150,7 +151,7 @@ void GameObject::MoveDown(float deltaTime)
 {
 	if (m_move_down)
 	{
-		m_facing_direction = FACING_DOWN;
+		m_facing_direction = FACING::FACING_DOWN;
 		m_position.y -= deltaTime * 100;
 	}
 }
@@ -159,7 +160,7 @@ void GameObject::MoveRight(float deltaTime)
 {
 	if (m_move_right)
 	{
-		m_facing_direction = FACING_RIGHT;
+		m_facing_direction = FACING::FACING_RIGHT;
 		m_position.x -= deltaTime * 100;
 	}
 }

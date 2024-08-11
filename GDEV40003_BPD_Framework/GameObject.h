@@ -31,7 +31,7 @@ protected:
 	static FACING m_facing_direction;
 
 	//Movment variable
-	bool m_can_move;
+	static bool m_can_move;
 	static bool m_is_moving;
 	bool m_move_up;
 	bool m_move_left;

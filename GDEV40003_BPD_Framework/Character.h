@@ -15,10 +15,21 @@ public:
 	SDL_Texture* m_character_down;
 	SDL_Texture* m_character_up;
 
+	SDL_Texture* m_attack_left;
+	SDL_Texture* m_attack_right;
+	SDL_Texture* m_attack_down;
+	SDL_Texture* m_attack_up;
+
 protected:
 	float m_frame_time;
 	float m_frame_delay;
 	int m_current_frame;
 	const int m_num_of_frames = 4;
+
+	float m_attack_frame_time;
+	float m_attack_frame_delay;
+	int m_attack_current_frame;
+
+	bool m_attacking;
 
 };

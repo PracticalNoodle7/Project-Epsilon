@@ -206,7 +206,7 @@ void Level1BackgroundManager::MoveUp(float deltaTime)
 {
 	if (m_move_up)
 	{
-		ChangeFacingDirection(FACING_UP);
+		ChangeFacingDirection(FACING::FACING_UP);
 		for (int row = 0; row < 30; row++)
 		{
 			for (int column = 0; column < 35; column++)
@@ -221,7 +221,7 @@ void Level1BackgroundManager::MoveLeft(float deltaTime)
 {
 	if (m_move_left)
 	{
-		ChangeFacingDirection(FACING_LEFT);
+		ChangeFacingDirection(FACING::FACING_LEFT);
 		for (int row = 0; row < 30; row++)
 		{
 			for (int column = 0; column < 35; column++)
@@ -236,7 +236,7 @@ void Level1BackgroundManager::MoveDown(float deltaTime)
 {
 	if (m_move_down)
 	{
-		ChangeFacingDirection(FACING_DOWN);
+		ChangeFacingDirection(FACING::FACING_DOWN);
 		for (int row = 0; row < 30; row++)
 		{
 			for (int column = 0; column < 35; column++)
@@ -251,7 +251,7 @@ void Level1BackgroundManager::MoveRight(float deltaTime)
 {
 	if (m_move_right)
 	{
-		ChangeFacingDirection(FACING_RIGHT);
+		ChangeFacingDirection(FACING::FACING_RIGHT);
 		for (int row = 0; row < 30; row++)
 		{
 			for (int column = 0; column < 35; column++)
