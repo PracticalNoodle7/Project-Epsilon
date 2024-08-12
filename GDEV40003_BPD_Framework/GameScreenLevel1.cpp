@@ -34,13 +34,9 @@ void GameScreenLevel1::Render()
 void GameScreenLevel1::Update(float deltaTime, SDL_Event e)
 {
 
-	//Update player and attack when shop and inventory are not open
-	if (!InventoryManager::Instance(m_renderer)->m_is_inventory_open)
-	{
-		//Update character and background
-		m_character->Update(deltaTime, e);
-		m_background->Update(deltaTime, e);
-	}
+	//Update character and background
+	m_character->Update(deltaTime, e);
+	m_background->Update(deltaTime, e);
 
 	//Update inventory
 	InventoryManager::Instance(m_renderer)->Update(deltaTime, e);

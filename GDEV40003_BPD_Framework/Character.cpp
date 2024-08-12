@@ -15,94 +15,114 @@ Character::Character(SDL_Renderer* renderer, Vector2D start_position) : GameObje
 	m_attack_frame_delay = 0.15;
 	m_attack_current_frame = 0;
 
+	m_roll_frame_time = 0;
+	m_roll_frame_delay = 0.15;
+	m_roll_current_frame = 0;
+
+	//initialising character health
+	maxHealth = 100;
+	currentHealth = 100;
+	fullBarWidth = 128;
+	healthBarWidth = 128;
+
 	//load texture
 	if (m_texture != nullptr)
 	{
-		m_character_left = m_texture->LoadFromTileMap("images/Character/Character_Left.png");
-		m_character_right = m_texture->LoadFromTileMap("images/Character/Character_Right.png");
-		m_character_down = m_texture->LoadFromTileMap("images/Character/Character_Down.png");
-		m_character_up = m_texture->LoadFromTileMap("images/Character/Character_Up.png");
-
-		m_attack_left = m_texture->LoadFromTileMap("images/Character/Character_Slash_Left.png");
-		m_attack_right = m_texture->LoadFromTileMap("images/Character/Character_Slash_Right.png");
-		m_attack_down = m_texture->LoadFromTileMap("images/Character/Character_Slash_Down.png");
-		m_attack_up = m_texture->LoadFromTileMap("images/Character/Character_Slash_Up.png");
+		m_character_walk = m_texture->LoadFromTileMap("images/Character/Character_Walk.png");
+		m_character_slash = m_texture->LoadFromTileMap("images/Character/Character_Slash.png");
+		m_health_bar = m_texture->LoadFromTileMap("images/Character/HealthBar.png");
+		m_health_bar_boarder = m_texture->LoadFromTileMap("images/Character/HealthBar_Boarder.png");
 	}
 }
 
 Character::~Character()
 {
-	delete m_character_left;
-	m_character_left = nullptr;
 
-	delete m_character_right;
-	m_character_right = nullptr;
-
-	delete m_character_down;
-	m_character_down = nullptr;
-
-	delete m_character_up;
-	m_character_up = nullptr;
 }
 
 void Character::Render()
 {
 
+	srcRect.h = 32;
+	srcRect.w = 32;
+
 	if (!m_attacking)
 	{
-		srcRect.x = m_current_frame * 32;
-		srcRect.y = 0;
-
 		switch (m_facing_direction)
 		{
 
 		case FACING::FACING_RIGHT:
-			m_texture->Render(m_character_right, srcRect, Vector2D(m_position.x, m_position.y));
+			srcRect.x = (m_current_frame * 32) + 128;
+			srcRect.y = 0;
+			m_texture->Render(m_character_walk, srcRect, Vector2D(m_position.x, m_position.y));
 			break;
 
 		case FACING::FACING_LEFT:
-			m_texture->Render(m_character_left, srcRect, Vector2D(m_position.x, m_position.y));
+			srcRect.x = m_current_frame * 32;
+			srcRect.y = 0;
+			m_texture->Render(m_character_walk, srcRect, Vector2D(m_position.x, m_position.y));
 			break;
 
 		case FACING::FACING_DOWN:
-			m_texture->Render(m_character_down, srcRect, Vector2D(m_position.x, m_position.y));
+			srcRect.x = m_current_frame * 32;
+			srcRect.y = 32;
+			m_texture->Render(m_character_walk, srcRect, Vector2D(m_position.x, m_position.y));
 			break;
 
 		case FACING::FACING_UP:
-			m_texture->Render(m_character_up, srcRect, Vector2D(m_position.x, m_position.y));
+			srcRect.x = (m_current_frame * 32) + 128;
+			srcRect.y = 32;
+			m_texture->Render(m_character_walk, srcRect, Vector2D(m_position.x, m_position.y));
 			break;
 		}
 	}
 	else
 	{
-		srcRect.x = m_attack_current_frame * 32;
-		srcRect.y = 0;
-
 		switch (m_facing_direction)
 		{
-
 		case FACING::FACING_RIGHT:
-			m_texture->Render(m_attack_right, srcRect, Vector2D(m_position.x, m_position.y));
+			srcRect.x = (m_attack_current_frame * 32) + 128;
+			srcRect.y = 0;
+			m_texture->Render(m_character_slash, srcRect, Vector2D(m_position.x, m_position.y));
 			break;
 
 		case FACING::FACING_LEFT:
-			m_texture->Render(m_attack_left, srcRect, Vector2D(m_position.x, m_position.y));
+			srcRect.x = m_attack_current_frame * 32;
+			srcRect.y = 0;
+			m_texture->Render(m_character_slash, srcRect, Vector2D(m_position.x, m_position.y));
 			break;
 
 		case FACING::FACING_DOWN:
-			m_texture->Render(m_attack_down, srcRect, Vector2D(m_position.x, m_position.y));
+			srcRect.x = m_attack_current_frame * 32;
+			srcRect.y = 32;
+			m_texture->Render(m_character_slash, srcRect, Vector2D(m_position.x, m_position.y));
 			break;
 
 		case FACING::FACING_UP:
-			m_texture->Render(m_attack_up, srcRect, Vector2D(m_position.x, m_position.y));
+			srcRect.x = (m_attack_current_frame * 32) + 128;
+			srcRect.y = 32;
+			m_texture->Render(m_character_slash, srcRect, Vector2D(m_position.x, m_position.y));
 			break;
 		}
 	}
+
+	srcRect.x = 0;
+	srcRect.y = 0;
+	srcRect.h = 16;
+	srcRect.w = 128;
+
+	m_texture->Render(m_health_bar_boarder, SDL_FLIP_NONE, 0.0, srcRect, Vector2D(10, 10));
+
+	srcRect.w = healthBarWidth;
+	m_texture->Render(m_health_bar, SDL_FLIP_NONE, 0.0, srcRect, Vector2D(10, 10));
 
 }
 
 void Character::Update(float deltaTime, SDL_Event e)
 {
+	// Calculate the width of the health bar portion to display
+	healthBarWidth = (currentHealth * fullBarWidth) / maxHealth;
+
 	if (GameObject::m_is_moving && !m_attacking)
 	{
 		m_frame_time += deltaTime;
@@ -141,18 +161,16 @@ void Character::Update(float deltaTime, SDL_Event e)
 		}
 	}
 
-
 	switch (e.type)
 	{
 	case SDL_MOUSEBUTTONDOWN:
 		switch (e.button.state)
 		{
 		case SDL_BUTTON_LEFT:
-			m_attacking = true;
+			m_attacking = true; 
 			GameObject::m_can_move = false;
 			break;
 		}
 	}
 }
-
 

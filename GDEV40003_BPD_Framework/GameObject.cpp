@@ -36,8 +36,7 @@ GameObject::~GameObject()
 
 void  GameObject::Render()
 {
-	//draw the GameObject
-	m_texture->Render(m_position, SDL_FLIP_NONE, 0.0);
+
 }
 
 void GameObject::Update(float deltaTime, SDL_Event e)
@@ -60,66 +59,67 @@ void GameObject::Update(float deltaTime, SDL_Event e)
 		{
 			MoveRight(deltaTime);
 		}
+	}
 
-		//handle the events
-		switch (e.type)
+	//handle the events
+	switch (e.type)
+	{
+	case SDL_KEYDOWN:
+
+		switch (e.key.keysym.sym)
 		{
-		case SDL_KEYDOWN:
-
-			switch (e.key.keysym.sym)
-			{
-				//Press W to move up
-			case SDLK_w:
-				m_move_up = true;
-				m_is_moving = true;
-				break;
-
-				//Press A to move left
-			case SDLK_a:
-				m_move_left = true;
-				m_is_moving = true;
-				break;
-
-				//Press S to move down
-			case SDLK_s:
-				m_move_down = true;
-				m_is_moving = true;
-				break;
-
-				//Press D to move right
-			case SDLK_d:
-				m_move_right = true;
-				m_is_moving = true;
-				break;
-			}
+			//Press W to move up
+		case SDLK_w:
+			m_move_up = true;
+			m_is_moving = true;
 			break;
-		case SDL_KEYUP:
-			switch (e.key.keysym.sym)
-			{
-				//Check if w is up
-			case SDLK_w:
-				m_move_up = false;
-				m_is_moving = false;
-				break;
 
-				//Check if a is up
-			case SDLK_a:
-				m_move_left = false;
-				m_is_moving = false;
-				break;
+			//Press A to move left
+		case SDLK_a:
+			m_move_left = true;
+			m_is_moving = true;
+			break;
 
-				//Check if s is up
-			case SDLK_s:
-				m_move_down = false;
-				m_is_moving = false;
-				break;
+			//Press S to move down
+		case SDLK_s:
+			m_move_down = true;
+			m_is_moving = true;
+			break;
 
-				//Check if d is up
-			case SDLK_d:
-				m_move_right = false;
-				m_is_moving = false;
-				break;
-			}
+			//Press D to move right
+		case SDLK_d:
+			m_move_right = true;
+			m_is_moving = true;
+			break;
+		}
+		break;
+
+	case SDL_KEYUP:
+		switch (e.key.keysym.sym)
+		{
+			//Check if w is up
+		case SDLK_w:
+			m_move_up = false;
+			m_is_moving = false;
+			break;
+
+			//Check if a is up
+		case SDLK_a:
+			m_move_left = false;
+			m_is_moving = false;
+			break;
+
+			//Check if s is up
+		case SDLK_s:
+			m_move_down = false;
+			m_is_moving = false;
+			break;
+
+			//Check if d is up
+		case SDLK_d:
+			m_move_right = false;
+			m_is_moving = false;
+			break;
 		}
 	}
 }

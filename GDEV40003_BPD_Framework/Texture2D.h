@@ -15,7 +15,7 @@ public:
 	SDL_Texture* LoadFromTileMap(std::string path);
 	void Free();
 
-	void Render(Vector2D new_position, SDL_RendererFlip flip, double angle);
+	void Render(SDL_Texture* texture, SDL_RendererFlip flip, double angle, SDL_Rect srcRect, Vector2D new_position);
 	void Render(SDL_Texture* texture, SDL_Rect srcRect, Vector2D new_position);
 
 	int GetWidth() { return m_width; }

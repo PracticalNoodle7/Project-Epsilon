@@ -9,7 +9,7 @@ public:
 
 	void LoadTileMap(int arr[30][35]);
 	void Render() override;
-	void Update(float deltaTime, SDL_Event e) override;
+	void Update(float deltaTime, SDL_Event e);
 
 protected:
 	SDL_Texture* m_grass;
