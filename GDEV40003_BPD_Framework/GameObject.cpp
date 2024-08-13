@@ -5,6 +5,7 @@
 FACING GameObject::m_facing_direction = FACING::FACING_RIGHT;
 bool GameObject::m_is_moving;
 bool GameObject::m_can_move;
+bool GameObject::m_rolling;
 
 GameObject::GameObject(SDL_Renderer* renderer, Vector2D start_position)
 {
@@ -48,15 +49,15 @@ void GameObject::Update(float deltaTime, SDL_Event e)
 		{
 			MoveUp(deltaTime);
 		}
-		else if (m_move_left)
+		if (m_move_left)
 		{
 			MoveLeft(deltaTime);
 		}
-		else if (m_move_down)
+		if (m_move_down)
 		{
 			MoveDown(deltaTime);
 		}
-		else if (m_move_right)
+		if (m_move_right)
 		{
 			MoveRight(deltaTime);
 		}

@@ -26,10 +26,10 @@ protected:
 	float m_frame_time;
 	int m_current_frame;
 	const int m_num_of_frames = 4;
+	ANIMATION_STATES m_current_animation;
 
 	//Attacking variables
 	bool m_attacking;
-	static bool m_rolling;
 
 	//Health variables
 	int maxHealth;

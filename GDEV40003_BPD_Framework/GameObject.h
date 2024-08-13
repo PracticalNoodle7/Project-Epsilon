@@ -33,6 +33,7 @@ protected:
 	//Movment variable
 	static bool m_can_move;
 	static bool m_is_moving;
+	static bool m_rolling;
 	bool m_move_up;
 	bool m_move_left;
 	bool m_move_down;

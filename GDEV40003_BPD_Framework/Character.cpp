@@ -2,8 +2,6 @@
 #include "Texture2D.h"
 #include "Constants.h"
 
-bool Character::m_rolling = false;
-
 Character::Character(SDL_Renderer* renderer, Vector2D start_position) : GameObject(renderer, start_position)
 {
 	//initialising moving variables
@@ -40,7 +38,7 @@ void Character::Render()
 	srcRect.h = 32;
 	srcRect.w = 32;
 
-	if (!m_attacking && !m_rolling)
+	if (!m_attacking && !GameObject::m_rolling)
 	{
 		switch (m_facing_direction)
 		{
@@ -146,16 +144,34 @@ void Character::Update(float deltaTime, SDL_Event e)
 	// Calculate the width of the health bar portion to display
 	healthBarWidth = (currentHealth * fullBarWidth) / maxHealth;
 
-	if (GameObject::m_is_moving && !m_attacking)
+	if (GameObject::m_is_moving && !m_attacking && !GameObject::m_rolling)
 	{
+		if (m_current_animation != WALKING)
+		{
+			m_current_animation = WALKING;
+			m_current_frame = 0;
+		}
+
 		FrameUpdate(deltaTime, 0.1);
 	}
 	else if(m_attacking)
 	{
+		if (m_current_animation != ATTACKING)
+		{
+			m_current_animation = ATTACKING;
+			m_current_frame = 0;
+		}
+
 		FrameUpdate(deltaTime, 0.15);
 	}
 	else if (m_rolling && !m_attacking)
 	{
+		if (m_current_animation != ROLLING)
+		{
+			m_current_animation = ROLLING;
+			m_current_frame = 0;
+		}
+
 		FrameUpdate(deltaTime, 0.15);
 	}
 	else

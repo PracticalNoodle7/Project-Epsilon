@@ -16,10 +16,10 @@ protected:
 	Tile m_tile_map[30][35];
 
 	//Movment Functions
-	void MoveUp(float deltaTime) override;
-	void MoveLeft(float deltaTime) override;
-	void MoveDown(float deltaTime) override;
-	void MoveRight(float deltaTime) override;
+	void Move(Vector2D movement, float deltaTime);
+	void Rolling(Vector2D movement, float deltaTime);
+
+	float m_movment_speed;
 
 };
 

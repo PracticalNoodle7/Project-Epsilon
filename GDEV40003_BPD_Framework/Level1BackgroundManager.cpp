@@ -38,6 +38,8 @@ int Level1[30][35] = {
 
 Level1BackgroundManager::Level1BackgroundManager(SDL_Renderer* renderer, Vector2D start_position) : GameObject(renderer, start_position)
 {
+    m_movment_speed = 1;
+
 	if (m_texture != nullptr)
 	{
 		m_grass = m_texture->LoadFromTileMap("images/Overworld_Tile/Grass_TileMap.png");
@@ -120,144 +122,168 @@ void Level1BackgroundManager::Render()
 
 void Level1BackgroundManager::Update(float deltaTime, SDL_Event e)
 {
-	if (m_can_move)
-	{
-		if (m_move_up)
-		{
-			m_is_moving = true;
-			MoveUp(deltaTime);
-		}
-		else if (m_move_left)
-		{
-			m_is_moving = true;
-			MoveLeft(deltaTime);
-		}
-		else if (m_move_down)
-		{
-			m_is_moving = true;
-			MoveDown(deltaTime);
-		}
-		else if (m_move_right)
-		{
-			m_is_moving = true;
-			MoveRight(deltaTime);
-		}
-		else
-		{
-			m_is_moving = false;
-		}
+    m_is_moving = false;  // Assume not moving by default
 
-		//handle the events
-		switch (e.type)
-		{
-		case SDL_KEYDOWN:
+    Vector2D movement(0.0f, 0.0f);  // Initialize movement vector
 
-			switch (e.key.keysym.sym)
-			{
-				//Press W to move up
-			case SDLK_w:
-				m_move_up = true;
-				break;
+    if (m_can_move)
+    {
+        // Calculate movement vector
+        if (m_move_up)
+        {
+            movement.y += 1;
+        }
+        if (m_move_left)
+        {
+            movement.x += 1;
+        }
+        if (m_move_down)
+        {
+            movement.y -= 1;
+        }
+        if (m_move_right)
+        {
+            movement.x -= 1;
+        }
+        
 
-				//Press A to move left
-			case SDLK_a:
-				m_move_left = true;
-				break;
+        // Normalize the movement vector to prevent faster diagonal movement
+        if (movement.x != 0 || movement.y != 0)
+        {
+            movement = movement.Normalize();
+            m_is_moving = true;
 
-				//Press S to move down
-			case SDLK_s:
-				m_move_down = true;
-				break;
+            // Apply movement
+            if (!GameObject::m_rolling)
+            {
+                Move(movement, deltaTime);
+            }
+            else
+            {
+                Rolling(movement, deltaTime);
+            }
 
-				//Press D to move right
-			case SDLK_d:
-				m_move_right = true;
-				break;
-			}
-			break;
-		case SDL_KEYUP:
-			switch (e.key.keysym.sym)
-			{
-				//Check if w is up
-			case SDLK_w:
-				m_move_up = false;
-				break;
+        }
 
-				//Check if a is up
-			case SDLK_a:
-				m_move_left = false;
-				break;
+        // Handle the events
+        switch (e.type)
+        {
+        case SDL_KEYDOWN:
 
-				//Check if s is up
-			case SDLK_s:
-				m_move_down = false;
-				break;
+            switch (e.key.keysym.sym)
+            {
+                // Press W to move up
+            case SDLK_w:
+                m_move_up = true;
+                break;
 
-				//Check if d is up
-			case SDLK_d:
-				m_move_right = false;
-				break;
-			}
-		}
-	}
+                // Press A to move left
+            case SDLK_a:
+                m_move_left = true;
+                break;
+
+                // Press S to move down
+            case SDLK_s:
+                m_move_down = true;
+                break;
+
+                // Press D to move right
+            case SDLK_d:
+                m_move_right = true;
+                break;
+            }
+            break;
+        case SDL_KEYUP:
+            switch (e.key.keysym.sym)
+            {
+                // Check if W is up
+            case SDLK_w:
+                m_move_up = false;
+                break;
+
+                // Check if A is up
+            case SDLK_a:
+                m_move_left = false;
+                break;
+
+                // Check if S is up
+            case SDLK_s:
+                m_move_down = false;
+                break;
+
+                // Check if D is up
+            case SDLK_d:
+                m_move_right = false;
+                break;
+            }
+        }
+    }
 }
 
-void Level1BackgroundManager::MoveUp(float deltaTime)
+void Level1BackgroundManager::Move(Vector2D movement, float deltaTime)
 {
-	if (m_move_up)
-	{
-		ChangeFacingDirection(FACING::FACING_UP);
-		for (int row = 0; row < 30; row++)
-		{
-			for (int column = 0; column < 35; column++)
-			{
-				m_tile_map[row][column].y += deltaTime * 200;
-			}
-		}
-	}
+    // Apply movement to the tile map
+    for (int row = 0; row < 30; row++)
+    {
+        for (int column = 0; column < 35; column++)
+        {
+            m_tile_map[row][column].x += movement.x * deltaTime * 200;
+            m_tile_map[row][column].y += movement.y * deltaTime * 200;
+        }
+    }
+
+    if (movement.y > 0)
+    {
+        ChangeFacingDirection(FACING::FACING_UP);
+    }
+    else if (movement.y < 0)
+    {
+        ChangeFacingDirection(FACING::FACING_DOWN);
+    }
+    else if (movement.x > 0)
+    {
+        ChangeFacingDirection(FACING::FACING_LEFT);
+    }
+    else if (movement.x < 0)
+    {
+        ChangeFacingDirection(FACING::FACING_RIGHT);
+    }
+            
 }
 
-void Level1BackgroundManager::MoveLeft(float deltaTime)
-{
-	if (m_move_left)
-	{
-		ChangeFacingDirection(FACING::FACING_LEFT);
-		for (int row = 0; row < 30; row++)
-		{
-			for (int column = 0; column < 35; column++)
-		    {
-				m_tile_map[row][column].x += deltaTime * 200;
-			}
-		}
-	}
-}
 
-void Level1BackgroundManager::MoveDown(float deltaTime)
+void Level1BackgroundManager::Rolling(Vector2D movement, float deltaTime)
 {
-	if (m_move_down)
-	{
-		ChangeFacingDirection(FACING::FACING_DOWN);
-		for (int row = 0; row < 30; row++)
-		{
-			for (int column = 0; column < 35; column++)
-			{
-				m_tile_map[row][column].y -= deltaTime * 200;
-			}
-		}
-	}
-}
+    switch (m_facing_direction)
+    {
+    case FACING::FACING_RIGHT:
+        movement.x -= 3;
+        movement.y = 0;
+        break;
 
-void Level1BackgroundManager::MoveRight(float deltaTime)
-{
-	if (m_move_right)
-	{
-		ChangeFacingDirection(FACING::FACING_RIGHT);
-		for (int row = 0; row < 30; row++)
-		{
-			for (int column = 0; column < 35; column++)
-			{
-				m_tile_map[row][column].x -= deltaTime * 200;
-			}
-		}
-	}
+    case FACING::FACING_LEFT:
+        movement.x += 3;
+        movement.y = 0;
+        break;
+
+    case FACING::FACING_DOWN:
+        movement.y -= 3;
+        movement.x = 0;
+        break;
+
+    case FACING::FACING_UP:
+        movement.y += 3;
+        movement.x = 0;
+        break;
+    }
+
+    // Apply movement to the tile map
+    for (int row = 0; row < 30; row++)
+    {
+        for (int column = 0; column < 35; column++)
+        {
+            m_tile_map[row][column].x += movement.x * deltaTime * 200;
+            m_tile_map[row][column].y += movement.y * deltaTime * 200;
+        }
+    }
 }

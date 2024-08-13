@@ -18,6 +18,24 @@ struct Vector2D
 		x = initial_x;
 		y = initial_y;
 	}
+
+
+	// Method to compute the magnitude (length) of the vector
+	float Magnitude() const
+	{
+		return sqrt(x * x + y * y);
+	}
+
+	// Method to normalize the vector (make it unit length)
+	Vector2D Normalize() const
+	{
+		float magnitude = Magnitude();
+		if (magnitude > 0)
+		{
+			return Vector2D(x / magnitude, y / magnitude);
+		}
+		return Vector2D(0, 0);  // Return zero vector if magnitude is zero
+	}
 };
 
 struct Velocity2D
@@ -50,6 +68,13 @@ enum ROTATION
 	NINETY,
 	ONE_EIGHTY,
 	TWO_SEVENTY
+};
+
+enum ANIMATION_STATES
+{
+	WALKING,
+	ATTACKING,
+	ROLLING
 };
 
 struct Rect2D
