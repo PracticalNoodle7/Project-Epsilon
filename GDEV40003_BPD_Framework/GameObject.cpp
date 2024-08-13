@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "Texture2D.h"
+#include "Character.h"
 
 FACING GameObject::m_facing_direction = FACING::FACING_RIGHT;
 bool GameObject::m_is_moving;
@@ -92,7 +93,6 @@ void GameObject::Update(float deltaTime, SDL_Event e)
 			m_is_moving = true;
 			break;
 		}
-		break;
 
 	case SDL_KEYUP:
 		switch (e.key.keysym.sym)

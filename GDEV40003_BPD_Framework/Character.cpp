@@ -2,22 +2,14 @@
 #include "Texture2D.h"
 #include "Constants.h"
 
+bool Character::m_rolling = false;
+
 Character::Character(SDL_Renderer* renderer, Vector2D start_position) : GameObject(renderer, start_position)
 {
 	//initialising moving variables
 	m_attacking = false;
-
 	m_frame_time = 0;
-	m_frame_delay = 0.1;
 	m_current_frame = 0;
-
-	m_attack_frame_time = 0;
-	m_attack_frame_delay = 0.15;
-	m_attack_current_frame = 0;
-
-	m_roll_frame_time = 0;
-	m_roll_frame_delay = 0.15;
-	m_roll_current_frame = 0;
 
 	//initialising character health
 	maxHealth = 100;
@@ -30,6 +22,8 @@ Character::Character(SDL_Renderer* renderer, Vector2D start_position) : GameObje
 	{
 		m_character_walk = m_texture->LoadFromTileMap("images/Character/Character_Walk.png");
 		m_character_slash = m_texture->LoadFromTileMap("images/Character/Character_Slash.png");
+		m_character_rolling = m_texture->LoadFromTileMap("images/Character/Character_Rolling.png");
+
 		m_health_bar = m_texture->LoadFromTileMap("images/Character/HealthBar.png");
 		m_health_bar_boarder = m_texture->LoadFromTileMap("images/Character/HealthBar_Boarder.png");
 	}
@@ -46,7 +40,7 @@ void Character::Render()
 	srcRect.h = 32;
 	srcRect.w = 32;
 
-	if (!m_attacking)
+	if (!m_attacking && !m_rolling)
 	{
 		switch (m_facing_direction)
 		{
@@ -76,32 +70,61 @@ void Character::Render()
 			break;
 		}
 	}
-	else
+	else if (m_attacking)
 	{
 		switch (m_facing_direction)
 		{
 		case FACING::FACING_RIGHT:
-			srcRect.x = (m_attack_current_frame * 32) + 128;
+			srcRect.x = (m_current_frame * 32) + 128;
 			srcRect.y = 0;
 			m_texture->Render(m_character_slash, srcRect, Vector2D(m_position.x, m_position.y));
 			break;
 
 		case FACING::FACING_LEFT:
-			srcRect.x = m_attack_current_frame * 32;
+			srcRect.x = m_current_frame * 32;
 			srcRect.y = 0;
 			m_texture->Render(m_character_slash, srcRect, Vector2D(m_position.x, m_position.y));
 			break;
 
 		case FACING::FACING_DOWN:
-			srcRect.x = m_attack_current_frame * 32;
+			srcRect.x = m_current_frame * 32;
 			srcRect.y = 32;
 			m_texture->Render(m_character_slash, srcRect, Vector2D(m_position.x, m_position.y));
 			break;
 
 		case FACING::FACING_UP:
-			srcRect.x = (m_attack_current_frame * 32) + 128;
+			srcRect.x = (m_current_frame * 32) + 128;
 			srcRect.y = 32;
 			m_texture->Render(m_character_slash, srcRect, Vector2D(m_position.x, m_position.y));
+			break;
+		}
+	}
+	else
+	{
+		switch (m_facing_direction)
+		{
+		case FACING::FACING_RIGHT:
+			srcRect.x = (m_current_frame * 32) + 128;
+			srcRect.y = 0;
+			m_texture->Render(m_character_rolling, srcRect, Vector2D(m_position.x, m_position.y));
+			break;
+
+		case FACING::FACING_LEFT:
+			srcRect.x = m_current_frame * 32;
+			srcRect.y = 0;
+			m_texture->Render(m_character_rolling, srcRect, Vector2D(m_position.x, m_position.y));
+			break;
+
+		case FACING::FACING_DOWN:
+			srcRect.x = m_current_frame * 32;
+			srcRect.y = 32;
+			m_texture->Render(m_character_rolling, srcRect, Vector2D(m_position.x, m_position.y));
+			break;
+
+		case FACING::FACING_UP:
+			srcRect.x = (m_current_frame * 32) + 128;
+			srcRect.y = 32;
+			m_texture->Render(m_character_rolling, srcRect, Vector2D(m_position.x, m_position.y));
 			break;
 		}
 	}
@@ -125,40 +148,19 @@ void Character::Update(float deltaTime, SDL_Event e)
 
 	if (GameObject::m_is_moving && !m_attacking)
 	{
-		m_frame_time += deltaTime;
-
-		if (m_frame_time >= m_frame_delay)
-		{
-			m_frame_time = 0;
-			m_current_frame++;
-
-			if (m_current_frame >= m_num_of_frames)
-			{
-				m_current_frame = 0;
-			}
-		}
+		FrameUpdate(deltaTime, 0.1);
+	}
+	else if(m_attacking)
+	{
+		FrameUpdate(deltaTime, 0.15);
+	}
+	else if (m_rolling && !m_attacking)
+	{
+		FrameUpdate(deltaTime, 0.15);
 	}
 	else
 	{
 		m_current_frame = 0;
-	}
-
-	if (m_attacking)
-	{
-		m_attack_frame_time += deltaTime;
-
-		if (m_attack_frame_time >= m_attack_frame_delay)
-		{
-			m_attack_frame_time = 0;
-			m_attack_current_frame++;
-
-			if (m_attack_current_frame >= m_num_of_frames)
-			{
-				m_attack_current_frame = 0;
-				m_attacking = false;
-				GameObject::m_can_move = true;
-			}
-		}
 	}
 
 	switch (e.type)
@@ -170,6 +172,40 @@ void Character::Update(float deltaTime, SDL_Event e)
 			m_attacking = true; 
 			GameObject::m_can_move = false;
 			break;
+		}
+
+	case SDL_KEYDOWN:
+		switch (e.key.keysym.sym)
+		{
+		case SDLK_SPACE:
+			Character::m_rolling = true;
+			break;
+		}
+	}
+}
+
+void Character::FrameUpdate(float deltaTime, float delay)
+{
+	m_frame_time += deltaTime;
+
+	if (m_frame_time >= delay)
+	{
+		m_frame_time = 0;
+		m_current_frame++;
+
+		if (m_current_frame >= m_num_of_frames)
+		{
+			m_current_frame = 0;
+
+			if (m_attacking)
+			{
+				m_attacking = false;
+				GameObject::m_can_move = true;
+			}
+			if (m_rolling)
+			{
+				Character::m_rolling = false;
+			}
 		}
 	}
 }
