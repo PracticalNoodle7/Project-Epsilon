@@ -146,6 +146,11 @@ void Level1BackgroundManager::Update(float deltaTime, SDL_Event e)
             movement.x -= 1;
         }
         
+        if(GameObject::m_rolling)
+        {
+            Rolling(movement, deltaTime);
+        }
+
 
         // Normalize the movement vector to prevent faster diagonal movement
         if (movement.x != 0 || movement.y != 0)
@@ -157,10 +162,6 @@ void Level1BackgroundManager::Update(float deltaTime, SDL_Event e)
             if (!GameObject::m_rolling)
             {
                 Move(movement, deltaTime);
-            }
-            else
-            {
-                Rolling(movement, deltaTime);
             }
 
         }
@@ -257,22 +258,22 @@ void Level1BackgroundManager::Rolling(Vector2D movement, float deltaTime)
     switch (m_facing_direction)
     {
     case FACING::FACING_RIGHT:
-        movement.x -= 3;
+        movement.x -= 0.5;
         movement.y = 0;
         break;
 
     case FACING::FACING_LEFT:
-        movement.x += 3;
+        movement.x += 0.5;
         movement.y = 0;
         break;
 
     case FACING::FACING_DOWN:
-        movement.y -= 3;
+        movement.y -= 0.5;
         movement.x = 0;
         break;
 
     case FACING::FACING_UP:
-        movement.y += 3;
+        movement.y += 0.5;
         movement.x = 0;
         break;
     }

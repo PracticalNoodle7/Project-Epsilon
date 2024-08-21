@@ -1,6 +1,7 @@
 #pragma once
 #include "Commons.h"
 #include "SDL.h"
+#include "Texture2D.h"
 #include <iostream>
 using namespace std;
 
@@ -19,6 +20,9 @@ public:
 	Vector2D GetPosition();
 	void ChangeFacingDirection(FACING new_Direction) { GameObject::m_facing_direction = new_Direction; };
 	void ChangeMovingBool(bool new_state) { GameObject::m_is_moving = new_state; };
+
+	Rect2D GetCollisionBox() { return Rect2D(m_position.x, m_position.y, m_texture->GetWidth(), m_texture->GetHeight()); }
+	float GetCollisionRadius();
 
 	Vector2D m_position;
 	Vector2D previousPosition;
@@ -39,6 +43,7 @@ protected:
 	bool m_move_down;
 	bool m_move_right;
 	float m_acceleration;
+	float m_collision_radius;
 
 	//Movment Functions
 	virtual void MoveUp(float deltaTime);

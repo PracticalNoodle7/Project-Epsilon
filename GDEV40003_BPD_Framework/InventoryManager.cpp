@@ -123,6 +123,7 @@ void InventoryManager::LoadInventory(int arr[10][15])
 			m_inv_slot[row][column].type = arr[row][column];
 			m_inv_slot[row][column].x = (column + 13) * 40;
 			m_inv_slot[row][column].y = (row + 3) * 40;
+			m_inv_slot[row][column].imagePath = m_empty_slot;
 		}
 	}
 }
@@ -139,6 +140,30 @@ void InventoryManager::LoadEquip(int arr[3][2])
 			m_equip_slot[row][column].category = m_categories[row][column];
 		}
 	}
+}
+
+void InventoryManager::AddToInventory(string imagePath)
+{
+	for (int row = 0; row < 10; row++)
+	{
+		for (int column = 0; column < 15; column++)
+		{
+			if (m_inv_slot[row][column].imagePath = m_texture->LoadFromTileMap(imagePath))
+			{
+				//TODO: Make function to check if there is enough space in the slot and add it to the slot.
+				//If there isnt leave the remainig behind if they can not be added to another slot
+			}
+			else
+			{
+				m_inv_slot[row][column].imagePath = m_texture->LoadFromTileMap(imagePath);
+			}
+		}
+	}
+}
+
+void InventoryManager::CheckSlotForSpace(int amount)
+{
+
 }
 
 void InventoryManager::Update(float deltaTime, SDL_Event e)

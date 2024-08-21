@@ -27,6 +27,9 @@ private:
 	void LoadInventory(int arr[10][15]);
 	void LoadEquip(int arr[3][2]);
 
+	void AddToInventory(string imagePath);
+	void CheckSlotForSpace(int amount);
+
 protected:
 	SDL_Renderer* m_renderer;
 	Texture2D* m_texture;

@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include "SDL.h"
+#include "SDL_image.h"
 using namespace std;
 
 struct Vector2D
@@ -109,7 +111,20 @@ struct Tile
 struct Slots
 {
 	int type;
+	SDL_Texture* imagePath;
 	float x, y;
 	string category;
 };
+
+struct ItemProperties
+{
+	string imagePath;
+	string category;
+	int consumable;
+	int damage;
+	int defence;
+	int price;
+};
+
+
 

@@ -25,6 +25,8 @@ GameObject::GameObject(SDL_Renderer* renderer, Vector2D start_position)
 	m_move_right = false;
 	m_acceleration = 5;
 
+	m_collision_radius = 30;
+
 	srcRect.x = 0;
 	srcRect.y = 0;
 	srcRect.w = 32;
@@ -171,7 +173,10 @@ Vector2D GameObject::GetPosition()
 	return m_position;
 }
 
-
+float GameObject::GetCollisionRadius()
+{
+	return m_collision_radius;
+}
 
 
 

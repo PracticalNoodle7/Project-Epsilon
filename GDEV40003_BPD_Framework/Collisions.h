@@ -2,15 +2,16 @@
 #include "Commons.h"
 #include "Character.h"
 
-class Gharacter;
+class Character;
 
 class Collisions
 {
 public:
 	~Collisions();
+
 	static Collisions* Instance();
 
-	bool Circle(GameObject* a, GameObject b);
+	bool Circle(GameObject* a, GameObject* b);
 	bool Box(Rect2D rect1, Rect2D rect2);
 
 private:

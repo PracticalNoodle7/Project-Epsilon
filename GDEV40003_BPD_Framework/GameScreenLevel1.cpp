@@ -40,6 +40,13 @@ void GameScreenLevel1::Update(float deltaTime, SDL_Event e)
 
 	//Update inventory
 	InventoryManager::Instance(m_renderer)->Update(deltaTime, e);
+
+	UpdateCollions();
+}
+
+void GameScreenLevel1::UpdateCollions()
+{
+
 }
 
 bool GameScreenLevel1::SetUpLevel1()
