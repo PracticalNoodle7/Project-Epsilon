@@ -113,6 +113,8 @@ struct Slots
 	int type;
 	SDL_Texture* imagePath;
 	float x, y;
+	int amount;
+	bool is_full;
 	string category;
 };
 

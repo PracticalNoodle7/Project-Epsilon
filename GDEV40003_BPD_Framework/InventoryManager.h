@@ -27,8 +27,8 @@ private:
 	void LoadInventory(int arr[10][15]);
 	void LoadEquip(int arr[3][2]);
 
-	void AddToInventory(string imagePath);
-	void CheckSlotForSpace(int amount);
+	void AddToInventory(string imagePath, int amount);
+	void CheckSlotForSpace(string imagePath, int amount, int row, int column);
 
 protected:
 	SDL_Renderer* m_renderer;

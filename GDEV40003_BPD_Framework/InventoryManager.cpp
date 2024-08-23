@@ -124,6 +124,8 @@ void InventoryManager::LoadInventory(int arr[10][15])
 			m_inv_slot[row][column].x = (column + 13) * 40;
 			m_inv_slot[row][column].y = (row + 3) * 40;
 			m_inv_slot[row][column].imagePath = m_empty_slot;
+			m_inv_slot[row][column].amount = 0;
+			m_inv_slot[row][column].is_full = false;
 		}
 	}
 }
@@ -138,32 +140,65 @@ void InventoryManager::LoadEquip(int arr[3][2])
 			m_equip_slot[row][column].x = (column + 1.5) * 100;
 			m_equip_slot[row][column].y = (row + 1.75) * 70;
 			m_equip_slot[row][column].category = m_categories[row][column];
+			m_equip_slot[row][column].amount = 0;
+			m_equip_slot[row][column].is_full = false;
 		}
 	}
 }
 
-void InventoryManager::AddToInventory(string imagePath)
+void InventoryManager::AddToInventory(string imagePath, int amount)
 {
 	for (int row = 0; row < 10; row++)
 	{
 		for (int column = 0; column < 15; column++)
 		{
-			if (m_inv_slot[row][column].imagePath = m_texture->LoadFromTileMap(imagePath))
+			if (m_inv_slot[row][column].is_full, m_inv_slot[row][column].imagePath = m_texture->LoadFromTileMap(imagePath))
 			{
 				//TODO: Make function to check if there is enough space in the slot and add it to the slot.
 				//If there isnt leave the remainig behind if they can not be added to another slot
+
+				CheckSlotForSpace(imagePath, amount, row, column);
 			}
 			else
 			{
 				m_inv_slot[row][column].imagePath = m_texture->LoadFromTileMap(imagePath);
+
+				if (amount <= 20)
+				{
+					m_inv_slot[row][column].amount = amount;
+
+					if (m_inv_slot[row][column].amount = 20)
+					{
+						m_inv_slot[row][column].is_full = true;
+					}
+					
+					//TODO: Make a way to delete the physical item
+				}
+				else
+				{
+					CheckSlotForSpace(imagePath, amount, row, column);
+				}
 			}
 		}
 	}
 }
 
-void InventoryManager::CheckSlotForSpace(int amount)
+void InventoryManager::CheckSlotForSpace(string imagePath, int amount, int row, int column)
 {
-
+	if (m_inv_slot[row][column].amount + amount > 20)
+	{
+		int m_left_over = m_inv_slot[row][column].amount + amount - 20;
+		m_inv_slot[row][column].amount = 20;
+		m_inv_slot[row][column].is_full = true;
+		
+		AddToInventory(imagePath, m_left_over);
+	}
+	else
+	{
+		m_inv_slot[row][column].amount += amount; 
+		
+		//TODO: Make a way to delete the physical item
+	}
 }
 
 void InventoryManager::Update(float deltaTime, SDL_Event e)
