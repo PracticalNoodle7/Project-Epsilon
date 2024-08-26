@@ -105,7 +105,6 @@ struct Tile
 {
 	int type;
 	float x, y;
-
 };
 
 struct Slots

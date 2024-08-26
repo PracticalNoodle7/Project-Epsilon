@@ -27,12 +27,9 @@ Goblin::~Goblin()
 
 void Goblin::Render()
 {
-
-}
-
-void Goblin::Update(float deltaTime, SDL_Event e)
-{
-	cout << "Goblin health is " << currentHealth << endl;
+	srcRect.x = srcRect.y = 0;
+	srcRect.w = srcRect.h = 32;
+	m_texture->Render(m_goblin, srcRect, Vector2D(m_position.x, m_position.y));
 }
 
 void Goblin::FrameUpdate(float deltaTime, float delay)

@@ -12,6 +12,9 @@ public:
 
 	virtual void FrameUpdate(float deltaTime, float delay);
 
+	void Move(Vector2D movement, float deltaTime);
+	void Rolling(Vector2D movment, float deltaTime);
+
 	//Health bar textures
 	SDL_Texture* m_health_bar;
 	SDL_Texture* m_health_bar_boarder;

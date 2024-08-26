@@ -249,7 +249,6 @@ void Level1BackgroundManager::Move(Vector2D movement, float deltaTime)
     {
         ChangeFacingDirection(FACING::FACING_RIGHT);
     }
-            
 }
 
 

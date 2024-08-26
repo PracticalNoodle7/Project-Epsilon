@@ -25,7 +25,11 @@ BasicEnemy::BasicEnemy(SDL_Renderer* renderer, Vector2D start_position) : GameOb
 
 BasicEnemy::~BasicEnemy()
 {
+    delete m_health_bar;
+    m_health_bar = nullptr;
 
+    delete m_health_bar_boarder;
+    m_health_bar_boarder = nullptr;
 }
 
 void BasicEnemy::Render()
@@ -35,7 +39,103 @@ void BasicEnemy::Render()
 
 void BasicEnemy::Update(float deltaTime, SDL_Event e)
 {
+    m_is_moving = false;  // Assume not moving by default
 
+    Vector2D movement(0.0f, 0.0f);  // Initialize movement vector
+
+    if (m_can_move)
+    {
+        // Calculate movement vector
+        if (m_move_up)
+        {
+            movement.y += 1;
+        }
+        if (m_move_left)
+        {
+            movement.x += 1;
+        }
+        if (m_move_down)
+        {
+            movement.y -= 1;
+        }
+        if (m_move_right)
+        {
+            movement.x -= 1;
+        }
+
+        if (GameObject::m_rolling)
+        {
+            Rolling(movement, deltaTime);
+        }
+
+
+        // Normalize the movement vector to prevent faster diagonal movement
+        if (movement.x != 0 || movement.y != 0)
+        {
+            movement = movement.Normalize();
+            m_is_moving = true;
+
+            // Apply movement
+            if (!GameObject::m_rolling)
+            {
+                Move(movement, deltaTime);
+            }
+
+        }
+
+        // Handle the events
+        switch (e.type)
+        {
+        case SDL_KEYDOWN:
+
+            switch (e.key.keysym.sym)
+            {
+                // Press W to move up
+            case SDLK_w:
+                m_move_up = true;
+                break;
+
+                // Press A to move left
+            case SDLK_a:
+                m_move_left = true;
+                break;
+
+                // Press S to move down
+            case SDLK_s:
+                m_move_down = true;
+                break;
+
+                // Press D to move right
+            case SDLK_d:
+                m_move_right = true;
+                break;
+            }
+            break;
+        case SDL_KEYUP:
+            switch (e.key.keysym.sym)
+            {
+                // Check if W is up
+            case SDLK_w:
+                m_move_up = false;
+                break;
+
+                // Check if A is up
+            case SDLK_a:
+                m_move_left = false;
+                break;
+
+                // Check if S is up
+            case SDLK_s:
+                m_move_down = false;
+                break;
+
+                // Check if D is up
+            case SDLK_d:
+                m_move_right = false;
+                break;
+            }
+        }
+    }
 }
 
 void BasicEnemy::FrameUpdate(float deltaTime, float delay)
@@ -58,4 +158,16 @@ void BasicEnemy::FrameUpdate(float deltaTime, float delay)
 			}
 		}
 	}
+}
+
+void BasicEnemy::Move(Vector2D movement, float deltaTime)
+{
+	// Apply movement to the basic enemies 
+	m_position.x += movement.x * deltaTime * 200;
+	m_position.y += movement.y * deltaTime * 200;
+}
+
+void BasicEnemy::Rolling(Vector2D movment, float deltaTime)
+{
+
 }

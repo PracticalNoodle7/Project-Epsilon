@@ -8,7 +8,6 @@ public:
 	~Goblin();
 
 	virtual void Render() override;
-	virtual void Update(float deltaTime, SDL_Event e) override;
 
 	virtual void FrameUpdate(float deltaTime, float delay) override;
 
