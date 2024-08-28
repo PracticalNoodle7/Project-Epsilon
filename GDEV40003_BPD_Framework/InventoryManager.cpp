@@ -73,7 +73,7 @@ void InventoryManager::Render()
 	srcRect.x = srcRect.y = 0;
 	srcRect.w = 1100;
 	srcRect.h = 600;
-	m_texture->Render(m_Inv_back_panel, srcRect, Vector2D(80, 65));
+	m_texture->Render(m_Inv_back_panel, srcRect, Vector2D(80, 65), SDL_FLIP_NONE);
 
 	for (int row = 0; row < 10; row++)
 	{
@@ -87,8 +87,8 @@ void InventoryManager::Render()
 			{
 			case 0:
 				srcRect.x = 0, srcRect.y = 0, srcRect.w = 32, srcRect.h = 32;
-				m_texture->Render(m_empty_slot, srcRect, Vector2D(m_position.x, m_position.y));
-				m_texture->Render(m_empty_slot, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_empty_slot, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+				m_texture->Render(m_empty_slot, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 				break;
 			}
 		}
@@ -106,8 +106,8 @@ void InventoryManager::Render()
 			{
 			case 0:
 				srcRect.x = 0, srcRect.y = 0, srcRect.w = 64, srcRect.h = 64;
-				m_texture->Render(m_empty_slot, srcRect, Vector2D(m_position.x, m_position.y));
-				m_texture->Render(m_empty_slot, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_empty_slot, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+				m_texture->Render(m_empty_slot, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 				break;
 			}
 		}

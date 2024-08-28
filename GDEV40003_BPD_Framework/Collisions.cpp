@@ -23,13 +23,13 @@ Collisions* Collisions::Instance()
 	return m_instance;
 }
 
-bool Collisions::Circle(GameObject* a, GameObject* b)
+bool Collisions::Circle(GameObject* a, GameObject* b, Collision_Type Type)
 {
 	Vector2D vec = Vector2D((a->GetPosition().x - b->GetPosition().x), (a->GetPosition().y - b->GetPosition().y));
 
 	double distance = sqrt((vec.x * vec.x) + (vec.y * vec.y));
 
-	double combined_distance = (a->GetCollisionRadius() + b->GetCollisionRadius());
+	double combined_distance = (a->GetCollisionRadius(Type) + b->GetCollisionRadius(Type));
 
 	return distance < combined_distance;
 }

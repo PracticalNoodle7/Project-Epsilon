@@ -51,9 +51,23 @@ void GameScreenLevel1::Update(float deltaTime, SDL_Event e)
 
 void GameScreenLevel1::UpdateCollions()
 {
-	if (Collisions::Instance()->Circle(m_character, m_goblin))
+	//Checking if an enemy is close to a player
+	if (Collisions::Instance()->Circle(m_character, m_goblin, CHASE))
 	{
-		cout << "Hello" << endl;
+		m_goblin->m_player_found = true;
+	}
+	else
+	{
+		m_goblin->m_player_found = false;
+	}
+
+	if (Collisions::Instance()->Circle(m_character, m_goblin, ATTACK))
+	{
+		m_goblin->m_attacking = true;
+	}
+	else
+	{
+		m_goblin->m_attacking = false;
 	}
 }
 
@@ -63,6 +77,10 @@ bool GameScreenLevel1::SetUpLevel1()
 	m_background = new Level1BackgroundManager(m_renderer, Vector2D());
 	m_character = new Character(m_renderer, Vector2D(640, 360));
 	m_goblin = new Goblin(m_renderer, Vector2D(300, 360));
+
+
+	//set pointers
+	m_goblin->SetCharacter(m_character);
 
 	return true;
 }

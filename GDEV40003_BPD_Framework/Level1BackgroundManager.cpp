@@ -81,39 +81,39 @@ void Level1BackgroundManager::Render()
 			{
 			case 0:
 				srcRect.x = 32, srcRect.y = 32;
-				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 				break;
 			case 1:
 				srcRect.x = 32, srcRect.y = 0;
-				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 				break;
 			case 2:
 				srcRect.x = 0, srcRect.y = 0;
-				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 				break;
 			case 3:
 				srcRect.x = 0, srcRect.y = 32;
-				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 				break;
 			case 4:
 				srcRect.x = 0, srcRect.y = 64;
-				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 				break;
 			case 5:
 				srcRect.x = 32, srcRect.y = 64;
-				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 				break;
 			case 6:
 				srcRect.x = 64, srcRect.y = 64;
-				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 				break;
 			case 7:
 				srcRect.x = 64, srcRect.y = 32;
-				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 				break;
 			case 8:
 				srcRect.x = 64, srcRect.y = 0;
-				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y));
+				m_texture->Render(m_grass, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 				break;
 			}
 		}
@@ -150,6 +150,7 @@ void Level1BackgroundManager::Update(float deltaTime, SDL_Event e)
         {
             Rolling(movement, deltaTime);
         }
+
 
 
         // Normalize the movement vector to prevent faster diagonal movement

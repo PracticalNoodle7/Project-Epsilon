@@ -9,8 +9,6 @@ public:
 
 	virtual void Render() override;
 
-	virtual void FrameUpdate(float deltaTime, float delay) override;
-
 	SDL_Texture* m_goblin;
 
 protected:

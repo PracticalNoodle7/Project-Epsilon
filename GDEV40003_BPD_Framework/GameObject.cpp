@@ -25,7 +25,8 @@ GameObject::GameObject(SDL_Renderer* renderer, Vector2D start_position)
 	m_move_right = false;
 	m_acceleration = 5;
 
-	m_collision_radius = 30;
+	m_collision_radius_chase = 100;
+	m_collision_radius_attack = 10;
 
 	srcRect.x = 0;
 	srcRect.y = 0;
@@ -173,9 +174,16 @@ Vector2D GameObject::GetPosition()
 	return m_position;
 }
 
-float GameObject::GetCollisionRadius()
+float GameObject::GetCollisionRadius(Collision_Type Type)
 {
-	return m_collision_radius;
+	if (Type == CHASE)
+	{
+		return m_collision_radius_chase;
+	}
+	else if (Type == ATTACK)
+	{
+		return m_collision_radius_attack;
+	}
 }
 
 

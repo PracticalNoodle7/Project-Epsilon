@@ -22,7 +22,7 @@ public:
 	void ChangeMovingBool(bool new_state) { GameObject::m_is_moving = new_state; };
 
 	Rect2D GetCollisionBox() { return Rect2D(m_position.x, m_position.y, m_texture->GetWidth(), m_texture->GetHeight()); }
-	float GetCollisionRadius();
+	float GetCollisionRadius(Collision_Type Type);
 
 	Vector2D m_position;
 	Vector2D previousPosition;
@@ -43,7 +43,8 @@ protected:
 	bool m_move_down;
 	bool m_move_right;
 	float m_acceleration;
-	float m_collision_radius;
+	float m_collision_radius_chase;
+	float m_collision_radius_attack;
 
 	//Movment Functions
 	virtual void MoveUp(float deltaTime);

@@ -76,7 +76,14 @@ enum ANIMATION_STATES
 {
 	WALKING,
 	ATTACKING,
-	ROLLING
+	ROLLING,
+	IDLE
+};
+
+enum Collision_Type
+{
+	CHASE,
+	ATTACK
 };
 
 struct Rect2D

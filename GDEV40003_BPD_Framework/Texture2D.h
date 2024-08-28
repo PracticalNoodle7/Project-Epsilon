@@ -16,7 +16,7 @@ public:
 	void Free();
 
 	void Render(SDL_Texture* texture, SDL_RendererFlip flip, double angle, SDL_Rect srcRect, Vector2D new_position);
-	void Render(SDL_Texture* texture, SDL_Rect srcRect, Vector2D new_position);
+	void Render(SDL_Texture* texture, SDL_Rect srcRect, Vector2D new_position, SDL_RendererFlip flip);
 
 	int GetWidth() { return m_width; }
 	int GetHeight() { return m_height; }

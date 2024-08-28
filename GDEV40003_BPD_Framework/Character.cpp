@@ -34,7 +34,6 @@ Character::~Character()
 
 void Character::Render()
 {
-
 	srcRect.h = 32;
 	srcRect.w = 32;
 
@@ -46,25 +45,25 @@ void Character::Render()
 		case FACING::FACING_RIGHT:
 			srcRect.x = (m_current_frame * 32) + 128;
 			srcRect.y = 0;
-			m_texture->Render(m_character_walk, srcRect, Vector2D(m_position.x, m_position.y));
+			m_texture->Render(m_character_walk, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 			break;
 
 		case FACING::FACING_LEFT:
 			srcRect.x = m_current_frame * 32;
 			srcRect.y = 0;
-			m_texture->Render(m_character_walk, srcRect, Vector2D(m_position.x, m_position.y));
+			m_texture->Render(m_character_walk, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 			break;
 
 		case FACING::FACING_DOWN:
 			srcRect.x = m_current_frame * 32;
 			srcRect.y = 32;
-			m_texture->Render(m_character_walk, srcRect, Vector2D(m_position.x, m_position.y));
+			m_texture->Render(m_character_walk, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 			break;
 
 		case FACING::FACING_UP:
 			srcRect.x = (m_current_frame * 32) + 128;
 			srcRect.y = 32;
-			m_texture->Render(m_character_walk, srcRect, Vector2D(m_position.x, m_position.y));
+			m_texture->Render(m_character_walk, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 			break;
 		}
 	}
@@ -75,25 +74,25 @@ void Character::Render()
 		case FACING::FACING_RIGHT:
 			srcRect.x = (m_current_frame * 32) + 128;
 			srcRect.y = 0;
-			m_texture->Render(m_character_slash, srcRect, Vector2D(m_position.x, m_position.y));
+			m_texture->Render(m_character_slash, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 			break;
 
 		case FACING::FACING_LEFT:
 			srcRect.x = m_current_frame * 32;
 			srcRect.y = 0;
-			m_texture->Render(m_character_slash, srcRect, Vector2D(m_position.x, m_position.y));
+			m_texture->Render(m_character_slash, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 			break;
 
 		case FACING::FACING_DOWN:
 			srcRect.x = m_current_frame * 32;
 			srcRect.y = 32;
-			m_texture->Render(m_character_slash, srcRect, Vector2D(m_position.x, m_position.y));
+			m_texture->Render(m_character_slash, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 			break;
 
 		case FACING::FACING_UP:
 			srcRect.x = (m_current_frame * 32) + 128;
 			srcRect.y = 32;
-			m_texture->Render(m_character_slash, srcRect, Vector2D(m_position.x, m_position.y));
+			m_texture->Render(m_character_slash, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 			break;
 		}
 	}
@@ -104,25 +103,25 @@ void Character::Render()
 		case FACING::FACING_RIGHT:
 			srcRect.x = (m_current_frame * 32) + 128;
 			srcRect.y = 0;
-			m_texture->Render(m_character_rolling, srcRect, Vector2D(m_position.x, m_position.y));
+			m_texture->Render(m_character_rolling, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 			break;
 
 		case FACING::FACING_LEFT:
 			srcRect.x = m_current_frame * 32;
 			srcRect.y = 0;
-			m_texture->Render(m_character_rolling, srcRect, Vector2D(m_position.x, m_position.y));
+			m_texture->Render(m_character_rolling, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 			break;
 
 		case FACING::FACING_DOWN:
 			srcRect.x = m_current_frame * 32;
 			srcRect.y = 32;
-			m_texture->Render(m_character_rolling, srcRect, Vector2D(m_position.x, m_position.y));
+			m_texture->Render(m_character_rolling, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 			break;
 
 		case FACING::FACING_UP:
 			srcRect.x = (m_current_frame * 32) + 128;
 			srcRect.y = 32;
-			m_texture->Render(m_character_rolling, srcRect, Vector2D(m_position.x, m_position.y));
+			m_texture->Render(m_character_rolling, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 			break;
 		}
 	}
