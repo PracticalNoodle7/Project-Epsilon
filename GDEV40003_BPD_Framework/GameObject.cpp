@@ -174,6 +174,28 @@ Vector2D GameObject::GetPosition()
 	return m_position;
 }
 
+Rect2D GameObject::GetAttackCollision()
+{
+	switch (m_facing_direction)
+	{
+	case FACING::FACING_RIGHT:
+		return Rect2D(m_position.x + 1, m_position.y, m_texture->GetWidth(), m_texture->GetHeight());
+		break;
+
+	case FACING::FACING_LEFT:
+		return Rect2D(m_position.x - 1, m_position.y, m_texture->GetWidth(), m_texture->GetHeight());
+		break;
+
+	case FACING::FACING_DOWN:
+		return Rect2D(m_position.x, m_position.y + 1, m_texture->GetWidth(), m_texture->GetHeight());
+		break;
+
+	case FACING::FACING_UP:
+		return Rect2D(m_position.x, m_position.y - 1, m_texture->GetWidth(), m_texture->GetHeight());
+		break;
+	}
+}
+
 float GameObject::GetCollisionRadius(Collision_Type Type)
 {
 	if (Type == CHASE)

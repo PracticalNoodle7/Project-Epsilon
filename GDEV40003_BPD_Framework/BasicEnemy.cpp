@@ -7,6 +7,7 @@ BasicEnemy::BasicEnemy(SDL_Renderer* renderer, Vector2D start_position) : GameOb
 {
 	//initialising moving variables
 	m_attacking = false;
+    m_damaged = false;
     m_player_found = false;
 	m_frame_time = 0;
 	m_current_frame = 0;
@@ -18,22 +19,25 @@ BasicEnemy::BasicEnemy(SDL_Renderer* renderer, Vector2D start_position) : GameOb
 
 	//initialising enemy health
 	maxHealth = 100;
-	currentHealth = 100;
-	fullBarWidth = 128;
-	healthBarWidth = 128;
+	currentHealth = maxHealth;
+	fullBarWidth = 24;
+	healthBarWidth = 24;
 
 	//load texture
 	if (m_texture != nullptr)
 	{
-		m_health_bar = m_texture->LoadFromTileMap("images/Character/HealthBar.png");
-		m_health_bar_boarder = m_texture->LoadFromTileMap("images/Character/HealthBar_Boarder.png");
+        m_enemy = m_texture->LoadFromTileMap("images/Enemy/Goblin.png");
+		m_health_bar = m_texture->LoadFromTileMap("images/Enemy/Health_bar.png");
+		m_health_bar_boarder = m_texture->LoadFromTileMap("images/Enemy/HealthBar_Boarder.png");
 	}
-
-
 }
 
 BasicEnemy::~BasicEnemy()
 {
+
+    delete m_enemy;
+    m_enemy = nullptr;
+
     delete m_health_bar;
     m_health_bar = nullptr;
 
@@ -43,13 +47,100 @@ BasicEnemy::~BasicEnemy()
 
 void BasicEnemy::Render()
 {
+    srcRect.h = srcRect.w = 48;
 
+    if (m_player_found && !m_attacking)
+    {
+        if (X > 0 && Y >= -10 && Y <= 10) // Walking right
+        {
+            srcRect.x = m_current_frame * 48;
+            srcRect.y = 148;
+            m_texture->Render(m_enemy, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+        }
+        else if (X < 0 && Y >= -10 && Y <= 10) // Walking left
+        {
+            srcRect.x = m_current_frame * 48;
+            srcRect.y = 148;
+            m_texture->Render(m_enemy, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_HORIZONTAL);
+        }
+        else if (Y > 10) // Walking down
+        {
+            srcRect.x = m_current_frame * 48;
+            srcRect.y = 96;
+            m_texture->Render(m_enemy, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+        }
+        else if (Y < -10) // Walking up
+        {
+            srcRect.x = m_current_frame * 48;
+            srcRect.y = 192;
+            m_texture->Render(m_enemy, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+        }
+    }
+    else if (m_attacking)
+    {
+        if (X > 0 && Y >= -10 && Y <= 10) // Attack right
+        {
+            srcRect.x = m_current_frame * 48;
+            srcRect.y = 288;
+            m_texture->Render(m_enemy, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+        }
+        else if (X < 0 && Y >= -10 && Y <= 10) // Attack left
+        {
+            srcRect.x = m_current_frame * 48;
+            srcRect.y = 288;
+            m_texture->Render(m_enemy, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_HORIZONTAL);
+        }
+        else if (Y > 10) // Attack down
+        {
+            srcRect.x = m_current_frame * 48;
+            srcRect.y = 240;
+            m_texture->Render(m_enemy, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+        }
+        else if (Y < -10) // Attack up
+        {
+            srcRect.x = m_current_frame * 48;
+            srcRect.y = 336;
+            m_texture->Render(m_enemy, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+        }
+    }
+    else
+    {
+        //Idle animation
+        srcRect.x = m_current_frame * 48;
+        srcRect.y = 0;
+        m_texture->Render(m_enemy, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+    }
+
+    srcRect.x = 0;
+    srcRect.y = 0;
+    srcRect.h = 8;
+    srcRect.w = 24;
+
+    m_texture->Render(m_health_bar_boarder, SDL_FLIP_NONE, 0.0, srcRect, Vector2D(m_position.x + 12, m_position.y + 3));
+
+    srcRect.w = healthBarWidth;
+    m_texture->Render(m_health_bar, SDL_FLIP_NONE, 0.0, srcRect, Vector2D(m_position.x + 12, m_position.y + 3));
 }
 
 void BasicEnemy::Update(float deltaTime, SDL_Event e)
 {
-    Y = m_character->m_position.y - m_position.y;
-    X = m_character->m_position.x - m_position.x;
+    // Calculate the width of the health bar portion to display
+    healthBarWidth = (currentHealth * fullBarWidth) / maxHealth;
+
+    // Calculate the different between the players position and the enemy position
+    if (!m_attacking)
+    {   
+        Y = m_character->m_position.y - m_position.y;
+        X = m_character->m_position.x - m_position.x;
+    }
+
+    if (m_damaged)
+    {
+        if (!m_character->m_attacking)
+        {
+            m_damaged = false;
+        }
+    }
 
     if (m_player_found && !m_attacking)
     {
@@ -62,7 +153,7 @@ void BasicEnemy::Update(float deltaTime, SDL_Event e)
 
         FrameUpdate(deltaTime, 0.1);
     }
- /*   if (m_attacking)
+    else if (m_attacking)
     {
         if (m_current_animation != ATTACKING)
         {
@@ -72,7 +163,7 @@ void BasicEnemy::Update(float deltaTime, SDL_Event e)
         }
          
         FrameUpdate(deltaTime, 0.25);
-    }*/
+    }
     else
     {
         if (m_current_animation != IDLE)
@@ -124,7 +215,6 @@ void BasicEnemy::Update(float deltaTime, SDL_Event e)
             {
                 Move(movement, deltaTime);
             }
-
         }
 
         // Handle the events
@@ -203,10 +293,32 @@ void BasicEnemy::FrameUpdate(float deltaTime, float delay)
 			if (m_attacking)
 			{
 				m_attacking = false;
+                m_player_found = true;
 				GameObject::m_can_move = true;
 			}
 		}
 	}
+}
+
+Rect2D BasicEnemy::GetAttackCollision()
+{
+    if (X > 0 && Y >= -10 && Y <= 10) // Walking right
+    {
+        return Rect2D(m_position.x + 1, m_position.y, m_texture->GetWidth(), m_texture->GetHeight());
+    }
+    else if (X < 0 && Y >= -10 && Y <= 10) // Walking left
+    {
+        return Rect2D(m_position.x - 1, m_position.y, m_texture->GetWidth(), m_texture->GetHeight());
+    }
+    else if (Y > 10) // Walking down
+    {
+        return Rect2D(m_position.x, m_position.y + 1, m_texture->GetWidth(), m_texture->GetHeight());
+    }
+    else if (Y < -10) // Walking up
+    {
+        return Rect2D(m_position.x, m_position.y - 1, m_texture->GetWidth(), m_texture->GetHeight());
+    }
+
 }
 
 void BasicEnemy::Move(Vector2D movement, float deltaTime)
@@ -284,3 +396,24 @@ Vector2D BasicEnemy::GetPlayerLocation()
 
     return Chase;
 }
+
+void BasicEnemy::TakeDamage(int damageAmount)
+{
+    if (!m_damaged)
+    {
+        currentHealth -= damageAmount;
+        cout << currentHealth << endl;
+        m_damaged = true;
+    }
+
+    if (currentHealth <= 0)
+    {
+        Dead();
+    }
+}
+
+void BasicEnemy::Dead()
+{
+
+}
+

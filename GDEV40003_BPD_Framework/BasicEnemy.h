@@ -13,6 +13,7 @@ public:
 	virtual void Update(float deltaTime, SDL_Event e) override;
 
 	virtual void FrameUpdate(float deltaTime, float delay);
+	virtual Rect2D GetAttackCollision();
 
 	void Move(Vector2D movement, float deltaTime);
 	void Rolling(Vector2D movement, float deltaTime);
@@ -21,13 +22,18 @@ public:
 	void ChasePlayer(Vector2D movment, float deltaTime);
 	Vector2D GetPlayerLocation();
 
+	void TakeDamage(int damageAmount);
+	virtual void Dead();
+
 	//Health bar textures
 	SDL_Texture* m_health_bar;
 	SDL_Texture* m_health_bar_boarder;
+	SDL_Texture* m_enemy;
 
 	//Enemy state variables
 	bool m_player_found;
 	bool m_attacking;
+	bool m_damaged;
 
 protected:
 	//animation variables

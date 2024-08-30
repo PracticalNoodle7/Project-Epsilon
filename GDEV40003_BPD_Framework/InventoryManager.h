@@ -27,6 +27,9 @@ private:
 	void LoadInventory(int arr[10][15]);
 	void LoadEquip(int arr[3][2]);
 
+	void HandleSlotClick(int row, int column);
+	void HandleEquipSlotClick(int row, int column);
+
 	void AddToInventory(string imagePath, int amount);
 	void CheckSlotForSpace(string imagePath, int amount, int row, int column);
 

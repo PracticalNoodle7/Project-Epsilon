@@ -22,6 +22,7 @@ public:
 	void ChangeMovingBool(bool new_state) { GameObject::m_is_moving = new_state; };
 
 	Rect2D GetCollisionBox() { return Rect2D(m_position.x, m_position.y, m_texture->GetWidth(), m_texture->GetHeight()); }
+	virtual Rect2D GetAttackCollision();
 	float GetCollisionRadius(Collision_Type Type);
 
 	Vector2D m_position;

@@ -6,7 +6,7 @@
 //foward declarations
 class Character;
 class Level1BackgroundManager;
-class Goblin;
+class BasicEnemy;
 
 class GameScreenLevel1 : GameScreen
 {
@@ -26,6 +26,6 @@ private:
 	//Declaring class pointers
 	Character* m_character;
 	Level1BackgroundManager* m_background;
-	Goblin* m_goblin;
+	BasicEnemy* m_basic_enemy;
 };
 

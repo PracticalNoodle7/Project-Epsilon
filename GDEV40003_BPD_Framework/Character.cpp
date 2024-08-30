@@ -29,6 +29,20 @@ Character::Character(SDL_Renderer* renderer, Vector2D start_position) : GameObje
 
 Character::~Character()
 {
+	delete m_character_walk;
+	m_character_walk = nullptr;
+
+	delete m_character_slash;
+	m_character_slash = nullptr;
+
+	delete m_character_rolling;
+	m_character_rolling = nullptr;
+
+	delete m_health_bar;
+	m_health_bar = nullptr;
+
+	delete m_health_bar_boarder;
+	m_health_bar_boarder = nullptr;
 
 }
 

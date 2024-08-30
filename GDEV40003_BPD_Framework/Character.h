@@ -21,15 +21,15 @@ public:
 	SDL_Texture* m_health_bar;
 	SDL_Texture* m_health_bar_boarder;
 
+	//Attacking variables
+	bool m_attacking;
+
 protected:
 	//animation variables
 	float m_frame_time;
 	int m_current_frame;
 	const int m_num_of_frames = 4;
 	ANIMATION_STATES m_current_animation;
-
-	//Attacking variables
-	bool m_attacking;
 
 	//Health variables
 	int maxHealth;

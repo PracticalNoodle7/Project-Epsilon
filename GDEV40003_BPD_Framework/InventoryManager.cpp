@@ -203,39 +203,112 @@ void InventoryManager::CheckSlotForSpace(string imagePath, int amount, int row, 
 
 void InventoryManager::Update(float deltaTime, SDL_Event e)
 {
-	switch (e.type)
-	{
-		//Detecting if a keyboard button is down
-	case SDL_KEYDOWN:
-		switch (e.key.keysym.sym)
-		{
-			//click E
-		case SDLK_e:
-			if (m_is_inventory_open)
-			{
-				m_is_inventory_open = false;
-			}
-			else
-			{
-				m_is_inventory_open = true;
-			}
-			break;
-		}
-
-		//Detecting if the mouse button is down
-	case SDL_MOUSEBUTTONDOWN:
-		switch (e.button.state)
-		{
-		case SDL_BUTTON_LEFT:
-			if (m_is_inventory_open)
-			{
-				cout << "Left button pressed" << endl;
-			}
-			break;
-		}
-
-	}
 	// Variables to hold the mouse position
 	int x, y;
 	SDL_GetMouseState(&x, &y);
+
+	switch (e.type)
+	{
+		// Detecting if a keyboard button is down
+	case SDL_KEYDOWN:
+		switch (e.key.keysym.sym)
+		{
+			// click E
+		case SDLK_e:
+			m_is_inventory_open = !m_is_inventory_open;
+			break;
+		}
+		break;
+
+		// Detecting if the mouse button is down
+	case SDL_MOUSEBUTTONDOWN:
+		if (e.button.button == SDL_BUTTON_LEFT && m_is_inventory_open)
+		{
+			// Check for clicks in inventory slots
+			for (int row = 0; row < 10; row++)
+			{
+				for (int column = 0; column < 15; column++)
+				{
+					int slotX = m_inv_slot[row][column].x;
+					int slotY = m_inv_slot[row][column].y;
+					int slotWidth = 32;
+					int slotHeight = 32;
+
+					if (x >= slotX && x <= slotX + slotWidth &&
+						y >= slotY && y <= slotY + slotHeight)
+					{
+						// Slot at (row, column) is clicked
+						HandleSlotClick(row, column);
+						break;
+					}
+				}
+			}
+
+			// Check for clicks in equipment slots
+			for (int row = 0; row < 3; row++)
+			{
+				for (int column = 0; column < 2; column++)
+				{
+					int slotX = m_equip_slot[row][column].x;
+					int slotY = m_equip_slot[row][column].y;
+					int slotWidth = 64; // Assuming the slot size is 64x64
+					int slotHeight = 64;
+
+					if (x >= slotX && x <= slotX + slotWidth &&
+						y >= slotY && y <= slotY + slotHeight)
+					{
+						// Equipment slot at (row, column) is clicked
+						HandleEquipSlotClick(row, column);
+						break;
+					}
+				}
+			}
+		}
+		break;
+	}
 }
+
+void InventoryManager::HandleSlotClick(int row, int column)
+{
+	if (m_inv_slot[row][column].imagePath != m_empty_slot)
+	{
+		if (m_inv_slot[row][column].category == "weapon")
+		{
+
+		}
+		else if (m_inv_slot[row][column].category == "armor")
+		{
+
+		}
+		else if (m_inv_slot[row][column].category == "shield")
+		{
+
+		}
+		else if (m_inv_slot[row][column].category == "helmet")
+		{
+
+		}
+		else if (m_inv_slot[row][column].category == "potion")
+		{
+
+		}
+		else if (m_inv_slot[row][column].category == "amulet")
+		{
+
+		}
+	}
+}
+
+void InventoryManager::HandleEquipSlotClick(int row, int column)
+{
+	if (m_equip_slot[row][column].imagePath != m_empty_slot)
+	{
+		//AddToInventory(m_equip_slot[row][column].imagePath, m_equip_slot[row][column].amount);
+	}
+}
+
+
+
+
+
+
