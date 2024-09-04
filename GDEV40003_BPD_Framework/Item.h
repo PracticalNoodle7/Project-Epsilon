@@ -1,7 +1,8 @@
 #pragma once
-#include "ItemManager.h"
+#include "GameObject.h"
+#include "vector"
 
-class Item : public ItemManager
+class Item : public GameObject
 {
 	Item(SDL_Renderer* renderer, Vector2D start_position);
 	~Item();
@@ -9,6 +10,8 @@ class Item : public ItemManager
 	virtual void Render() override;
 	virtual void Update(float deltaTime, SDL_Event e) override;
 
-	void DropItem(int itemNum);
+	void DropItem(string imagePath, Vector2D m_position, int m_quantity);
+
+	vector<DroppedItems> m_dropped_items;
 };
 

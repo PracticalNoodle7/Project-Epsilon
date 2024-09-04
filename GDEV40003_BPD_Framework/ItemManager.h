@@ -1,16 +1,24 @@
 #pragma once
 #include "GameObject.h"
+#include <vector>
 
 
 class ItemManager : public GameObject
 {
 public:
-	ItemManager(SDL_Renderer* renderer, Vector2D start_position);
 	~ItemManager();
 
-	virtual void Render() override;
+	static ItemManager* Instance(SDL_Renderer* renderer, Vector2D start_position);
+	int GetItemData(string imagePath);
 
 protected:
-	ItemProperties m_items[20];
+	vector<ItemProperties> m_items;
+
+private:
+	ItemManager(SDL_Renderer* renderer, Vector2D start_position);
+	static ItemManager* m_instance;
+
+	void SetUpItems();
+	void AddItem(string imagePath,string caregory, int consumable, int damage, int defence, int price);
 };
 

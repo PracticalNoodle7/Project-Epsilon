@@ -70,7 +70,7 @@ SDL_Texture* Texture2D::LoadFromTileMap(std::string path)
 	if (p_surface == nullptr)
 	{
 		std::cout << "Unable to load image. Error: " << IMG_GetError() << std::endl;
-		return nullptr;
+		return nullptr; 
 	}
 
 	// Color key the image to be transparent

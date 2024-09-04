@@ -124,8 +124,16 @@ struct Slots
 	string category;
 };
 
+struct DroppedItems
+{
+	SDL_Texture* imagePath;
+	Vector2D m_position;
+	int quantity;
+};
+
 struct ItemProperties
 {
+	int Id;
 	string imagePath;
 	string category;
 	int consumable;
