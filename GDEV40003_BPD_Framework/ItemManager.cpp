@@ -5,7 +5,7 @@ ItemManager* ItemManager::m_instance = nullptr;
 
 ItemManager::ItemManager(SDL_Renderer* renderer, Vector2D start_position) : GameObject(renderer, start_position)
 {
-
+	SetUpItems();
 }
 
 ItemManager::~ItemManager()
@@ -18,7 +18,6 @@ ItemManager* ItemManager::Instance(SDL_Renderer* renderer, Vector2D start_positi
 	if (!m_instance)
 	{
 		m_instance = new ItemManager(renderer, start_position);
-		ItemManager* SetUpItems();
 	}
 
 	return m_instance;
@@ -26,16 +25,8 @@ ItemManager* ItemManager::Instance(SDL_Renderer* renderer, Vector2D start_positi
 
 void ItemManager::SetUpItems()
 {
-	AddItem("1", "", 0, 10, 0, 0);
-	AddItem("2", "", 0, 10, 0, 0);
-	AddItem("3", "", 0, 10, 0, 0);
-	AddItem("4", "", 0, 10, 0, 0);
-	AddItem("5", "", 0, 10, 0, 0);
-	AddItem("6", "", 0, 10, 0, 0);
-	AddItem("7", "", 0, 10, 0, 0);
-	AddItem("8", "", 0, 10, 0, 0);
-	AddItem("9", "", 0, 10, 0, 0);
-	AddItem("0", "", 0, 10, 0, 0);
+	AddItem("images/Tiles/tile_0103.png", "Weapon", 0, 10, 0, 0);
+	AddItem("images/Tiles/tile_0102.png", "Shield", 0, 0, 10, 0);
 }
 
 void ItemManager::AddItem(string imagePath, string caregory, int consumable, int damage, int defence, int price)

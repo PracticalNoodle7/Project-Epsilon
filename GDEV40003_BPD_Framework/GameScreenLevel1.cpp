@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "Level1BackgroundManager.h"
 #include "InventoryManager.h"
+#include "ItemManager.h"
 #include "BasicEnemy.h"
 #include "Constants.h"
 #include <iostream>
