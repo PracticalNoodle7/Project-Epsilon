@@ -1,6 +1,7 @@
 #include "InventoryManager.h"
 #include "Texture2D.h"
 #include "Constants.h"
+#include "Item.h"
 
 //initialise instance to nullptr
 InventoryManager* InventoryManager::m_instance = nullptr;
@@ -152,31 +153,45 @@ void InventoryManager::AddToInventory(string imagePath, int amount)
 	{
 		for (int column = 0; column < 15; column++)
 		{
-			if (m_inv_slot[row][column].is_full, m_inv_slot[row][column].imagePath = m_texture->LoadFromTileMap(imagePath))
+			if (m_inv_slot[row][column].is_full)
 			{
-				//TODO: Make function to check if there is enough space in the slot and add it to the slot.
-				//If there isnt leave the remainig behind if they can not be added to another slot
-
+				// Slot is full, check if there is another space
 				CheckSlotForSpace(imagePath, amount, row, column);
+				return;  // Exit the function after placing the item or checking the slot
 			}
 			else
 			{
+				// Slot is not full, add the item here
 				m_inv_slot[row][column].imagePath = m_texture->LoadFromTileMap(imagePath);
 
+				// Check if the amount can fit in this slot (max 20 per slot)
 				if (amount <= 20)
 				{
 					m_inv_slot[row][column].amount = amount;
 
-					if (m_inv_slot[row][column].amount = 20)
+					// Mark the slot as full if it reaches 20
+					if (m_inv_slot[row][column].amount == 20)
 					{
 						m_inv_slot[row][column].is_full = true;
 					}
-					
-					//TODO: Make a way to delete the physical item
+
+					// Remove the item from the world
+					m_item->RemoveItem(imagePath);
+
+					return;  // Item has been placed, exit the function
 				}
 				else
 				{
+					// If amount exceeds 20, fill the slot and check for space in other slots
+					m_inv_slot[row][column].amount = 20;
+					m_inv_slot[row][column].is_full = true;
+
+					// Reduce the remaining amount by 20 and continue
+					amount -= 20;
+
+					// Continue to find another slot for the remaining amount
 					CheckSlotForSpace(imagePath, amount, row, column);
+					return;  // Exit the function after processing the item
 				}
 			}
 		}
@@ -196,8 +211,7 @@ void InventoryManager::CheckSlotForSpace(string imagePath, int amount, int row, 
 	else
 	{
 		m_inv_slot[row][column].amount += amount; 
-		
-		//TODO: Make a way to delete the physical item
+		m_item->RemoveItem(imagePath);
 	}
 }
 

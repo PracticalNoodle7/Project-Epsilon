@@ -2,6 +2,14 @@
 #include "Texture2D.h"
 #include "Constants.h"
 #include "Character.h"
+#include "Item.h"
+
+string m_drop_items[3]
+{
+    "images/Tiles/tile_0103.png",
+    "images/Tiles/tile_0102.png",
+    "images/Tiles/tile_0101.png"
+};
 
 BasicEnemy::BasicEnemy(SDL_Renderer* renderer, Vector2D start_position) : GameObject(renderer, start_position)
 {
@@ -9,6 +17,7 @@ BasicEnemy::BasicEnemy(SDL_Renderer* renderer, Vector2D start_position) : GameOb
 	m_attacking = false;
     m_damaged = false;
     m_player_found = false;
+    m_is_dead = false;
 	m_frame_time = 0;
 	m_current_frame = 0;
     m_num_of_frames = 0;
@@ -35,14 +44,6 @@ BasicEnemy::BasicEnemy(SDL_Renderer* renderer, Vector2D start_position) : GameOb
 BasicEnemy::~BasicEnemy()
 {
 
-    delete m_enemy;
-    m_enemy = nullptr;
-
-    delete m_health_bar;
-    m_health_bar = nullptr;
-
-    delete m_health_bar_boarder;
-    m_health_bar_boarder = nullptr;
 }
 
 void BasicEnemy::Render()
@@ -128,7 +129,7 @@ void BasicEnemy::Update(float deltaTime, SDL_Event e)
     healthBarWidth = (currentHealth * fullBarWidth) / maxHealth;
 
     // Calculate the different between the players position and the enemy position
-    if (!m_attacking)
+    if (!m_attacking && m_character != nullptr)
     {   
         Y = m_character->m_position.y - m_position.y;
         X = m_character->m_position.x - m_position.x;
@@ -409,11 +410,13 @@ void BasicEnemy::TakeDamage(int damageAmount)
     if (currentHealth <= 0)
     {
         Dead();
+        m_is_dead = true;
     }
 }
 
 void BasicEnemy::Dead()
 {
-
+    int m_quantity = (rand() % 4) + 1;
+    m_item->DropItem(m_drop_items[rand() % 3], Vector2D(m_position.x, m_position.y), m_quantity);
 }
 

@@ -7,6 +7,8 @@
 class Character;
 class Level1BackgroundManager;
 class BasicEnemy;
+class TestArena;
+class Item;
 
 class GameScreenLevel1 : GameScreen
 {
@@ -27,5 +29,7 @@ private:
 	Character* m_character;
 	Level1BackgroundManager* m_background;
 	BasicEnemy* m_basic_enemy;
+	TestArena* m_test_arena;
+	Item* m_item;
 };
 

@@ -9,6 +9,7 @@
 
 //foward declarations
 class Texture2D;
+class Item;
 
 class InventoryManager
 {
@@ -18,6 +19,9 @@ public:
 
 	void Render();
 	void Update(float deltaTime, SDL_Event e);
+
+	void AddToInventory(string imagePath, int amount);
+	void SetItemPointer(Item* m_item) { this->m_item = m_item; };
 
 	bool m_is_inventory_open;
 private:
@@ -30,7 +34,6 @@ private:
 	void HandleSlotClick(int row, int column);
 	void HandleEquipSlotClick(int row, int column);
 
-	void AddToInventory(string imagePath, int amount);
 	void CheckSlotForSpace(string imagePath, int amount, int row, int column);
 
 protected:
@@ -48,5 +51,7 @@ protected:
 	Slots m_equip_slot[3][2];
 	string m_categories[3][2];
 
+	//pointers
+	Item* m_item;
 };
 

@@ -2,6 +2,7 @@
 #include "GameObject.h"
 
 class Character;
+class Item;
 
 class BasicEnemy : public GameObject
 {
@@ -19,11 +20,12 @@ public:
 	void Rolling(Vector2D movement, float deltaTime);
 
 	void SetCharacter(Character* character) { m_character = character; }
+	void SetItem(Item* item) { m_item = item; }
 	void ChasePlayer(Vector2D movment, float deltaTime);
 	Vector2D GetPlayerLocation();
 
 	void TakeDamage(int damageAmount);
-	virtual void Dead();
+	void Dead();
 
 	//Health bar textures
 	SDL_Texture* m_health_bar;
@@ -34,6 +36,7 @@ public:
 	bool m_player_found;
 	bool m_attacking;
 	bool m_damaged;
+	bool m_is_dead;
 
 protected:
 	//animation variables
@@ -52,5 +55,8 @@ protected:
 	int healthBarWidth;
 
 	Character* m_character;
+	Item* m_item;
+
+	string m_drop_items[3];
 };
 

@@ -126,7 +126,8 @@ struct Slots
 
 struct DroppedItems
 {
-	SDL_Texture* imagePath;
+	SDL_Texture* imageTexture;
+	string imagePath;
 	Vector2D m_position;
 	int quantity;
 };

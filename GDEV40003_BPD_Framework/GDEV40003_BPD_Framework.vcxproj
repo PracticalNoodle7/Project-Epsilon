@@ -145,6 +145,7 @@
     <ClCompile Include="ItemManager.cpp" />
     <ClCompile Include="Level1BackgroundManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="TestArena.cpp" />
     <ClCompile Include="Texture2D.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +167,7 @@
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="Level1BackgroundManager.h" />
+    <ClInclude Include="TestArena.h" />
     <ClInclude Include="Texture2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

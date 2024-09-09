@@ -27,6 +27,7 @@ void ItemManager::SetUpItems()
 {
 	AddItem("images/Tiles/tile_0103.png", "Weapon", 0, 10, 0, 0);
 	AddItem("images/Tiles/tile_0102.png", "Shield", 0, 0, 10, 0);
+	AddItem("images/Tiles/tile_0101.png", "Armor", 0, 0, 10, 0);
 }
 
 void ItemManager::AddItem(string imagePath, string caregory, int consumable, int damage, int defence, int price)
