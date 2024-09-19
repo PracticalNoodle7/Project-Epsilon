@@ -126,7 +126,7 @@ void Level1BackgroundManager::Update(float deltaTime, SDL_Event e)
 
     Vector2D movement(0.0f, 0.0f);  // Initialize movement vector
 
-    if (m_can_move)
+    if (m_can_move && !GameObject::m_rolling)
     {
         // Calculate movement vector
         if (m_move_up)
@@ -145,7 +145,8 @@ void Level1BackgroundManager::Update(float deltaTime, SDL_Event e)
         {
             movement.x -= 1;
         }
-        
+
+    }
         if(GameObject::m_rolling)
         {
             Rolling(movement, deltaTime);
@@ -219,7 +220,7 @@ void Level1BackgroundManager::Update(float deltaTime, SDL_Event e)
                 break;
             }
         }
-    }
+    
 }
 
 void Level1BackgroundManager::Move(Vector2D movement, float deltaTime)
@@ -258,22 +259,22 @@ void Level1BackgroundManager::Rolling(Vector2D movement, float deltaTime)
     switch (m_facing_direction)
     {
     case FACING::FACING_RIGHT:
-        movement.x -= 0.5;
+        movement.x -= 1.5;
         movement.y = 0;
         break;
 
     case FACING::FACING_LEFT:
-        movement.x += 0.5;
+        movement.x += 1.5;
         movement.y = 0;
         break;
 
     case FACING::FACING_DOWN:
-        movement.y -= 0.5;
+        movement.y -= 1.5;
         movement.x = 0;
         break;
 
     case FACING::FACING_UP:
-        movement.y += 0.5;
+        movement.y += 1.5;
         movement.x = 0;
         break;
     }
@@ -287,4 +288,24 @@ void Level1BackgroundManager::Rolling(Vector2D movement, float deltaTime)
             m_tile_map[row][column].y += movement.y * deltaTime * 200;
         }
     }
+}
+
+void Level1BackgroundManager::SetSpawnPoints()
+{
+    spawnPoints.clear();
+
+    for (int row = 0; row < 30; row++)
+    {
+        for (int column = 0; column < 35; column++)
+        {
+            //Set type 0 as spawn locations
+            if (m_tile_map[row][column].type == 0)
+            {
+                // Add the tile's position to the list of spawn points
+                Vector2D spawnPosition(m_tile_map[row][column].x, m_tile_map[row][column].y);
+                spawnPoints.push_back(spawnPosition);
+            }
+        }
+    }
+
 }

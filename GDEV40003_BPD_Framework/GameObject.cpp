@@ -3,9 +3,13 @@
 #include "Character.h"
 
 FACING GameObject::m_facing_direction = FACING::FACING_RIGHT;
-bool GameObject::m_is_moving;
-bool GameObject::m_can_move;
+bool GameObject::m_is_moving = false;
+bool GameObject::m_can_move = true;
 bool GameObject::m_rolling;
+bool GameObject::m_move_up = false;
+bool GameObject::m_move_left = false;
+bool GameObject::m_move_down = false;
+bool GameObject::m_move_right = false;
 
 GameObject::GameObject(SDL_Renderer* renderer, Vector2D start_position)
 {
@@ -17,12 +21,6 @@ GameObject::GameObject(SDL_Renderer* renderer, Vector2D start_position)
 	m_texture = new Texture2D(m_renderer);
 
 	//Initialising Movment variable
-	m_can_move = true;
-	m_is_moving = false;
-	m_move_up = false;
-	m_move_left = false;
-	m_move_down = false;
-	m_move_right = false;
 	m_acceleration = 5;
 
 	m_collision_radius_chase = 100;
@@ -179,19 +177,19 @@ Rect2D GameObject::GetAttackCollision()
 	switch (m_facing_direction)
 	{
 	case FACING::FACING_RIGHT:
-		return Rect2D(m_position.x + 1, m_position.y, m_texture->GetWidth(), m_texture->GetHeight());
+		return Rect2D(m_position.x + 5, m_position.y, 16, 16);
 		break;
 
 	case FACING::FACING_LEFT:
-		return Rect2D(m_position.x - 1, m_position.y, m_texture->GetWidth(), m_texture->GetHeight());
+		return Rect2D(m_position.x - 18, m_position.y, 16, 16);
 		break;
 
 	case FACING::FACING_DOWN:
-		return Rect2D(m_position.x, m_position.y + 1, m_texture->GetWidth(), m_texture->GetHeight());
+		return Rect2D(m_position.x, m_position.y + 5, 16, 16);
 		break;
 
 	case FACING::FACING_UP:
-		return Rect2D(m_position.x, m_position.y - 1, m_texture->GetWidth(), m_texture->GetHeight());
+		return Rect2D(m_position.x, m_position.y - 18, 16, 16);
 		break;
 	}
 }

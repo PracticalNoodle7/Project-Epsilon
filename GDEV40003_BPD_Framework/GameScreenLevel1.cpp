@@ -52,6 +52,7 @@ void GameScreenLevel1::Update(float deltaTime, SDL_Event e)
 	{
 		enemy->SetCharacter(m_character);
 		enemy->SetItem(m_item);
+		enemy->Update(deltaTime, e);
 	}
 
 	//Update inventory
@@ -83,7 +84,10 @@ void GameScreenLevel1::UpdateCollions()
 		{
 			if (Collisions::Instance()->Box(m_character->GetAttackCollision(), enemy->GetCollisionBox()))
 			{
-				enemy->TakeDamage(10);
+				if (m_character->m_current_frame == 3)
+				{
+					enemy->m_health.TakeDamage(100);
+				}
 			}
 		}
 	}
@@ -106,6 +110,9 @@ bool GameScreenLevel1::SetUpLevel1()
 	m_item = new Item(m_renderer, Vector2D());
 
 	InventoryManager::Instance(m_renderer)->SetItemPointer(m_item);
+	ItemManager::Instance(m_renderer, Vector2D())->SetUpItems();
+
+	m_test_arena->SetLevel1BackgroundPointer(m_background);
 
 	return true;
 }

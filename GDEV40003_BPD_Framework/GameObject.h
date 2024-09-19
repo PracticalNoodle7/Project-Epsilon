@@ -21,7 +21,7 @@ public:
 	void ChangeFacingDirection(FACING new_Direction) { GameObject::m_facing_direction = new_Direction; };
 	void ChangeMovingBool(bool new_state) { GameObject::m_is_moving = new_state; };
 
-	Rect2D GetCollisionBox() { return Rect2D(m_position.x, m_position.y, m_texture->GetWidth(), m_texture->GetHeight()); }
+	Rect2D GetCollisionBox() { return Rect2D(m_position.x, m_position.y, 3, 3); }
 	virtual Rect2D GetAttackCollision();
 	float GetCollisionRadius(Collision_Type Type);
 
@@ -39,10 +39,10 @@ protected:
 	static bool m_can_move;
 	static bool m_is_moving;
 	static bool m_rolling;
-	bool m_move_up;
-	bool m_move_left;
-	bool m_move_down;
-	bool m_move_right;
+	static bool m_move_up;
+	static bool m_move_left;
+	static bool m_move_down;
+	static bool m_move_right;
 	float m_acceleration;
 	float m_collision_radius_chase;
 	float m_collision_radius_attack;

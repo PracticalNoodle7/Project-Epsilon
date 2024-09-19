@@ -18,10 +18,13 @@ public:
 	void ChangeScreen(SCREENS new_screen);
 
 	Character* GetCharacter();
-
+	static bool s_start_level_1;
 private:
 
 	SDL_Renderer* m_renderer;
 	GameScreen* m_current_screen;
+
+protected:
+	
 };
 

@@ -31,10 +31,13 @@ private:
 	void LoadInventory(int arr[10][15]);
 	void LoadEquip(int arr[3][2]);
 
-	void HandleSlotClick(int row, int column);
+	void HandleSlotClick(int row, int column, int item);
 	void HandleEquipSlotClick(int row, int column);
 
 	void CheckSlotForSpace(string imagePath, int amount, int row, int column);
+
+	void EmptyInvSlot(int row, int column);
+	void EmptyEquipSlot(int row, int column);
 
 protected:
 	SDL_Renderer* m_renderer;

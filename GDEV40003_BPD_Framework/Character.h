@@ -23,17 +23,13 @@ public:
 
 	//Attacking variables
 	bool m_attacking;
+	int m_current_frame;
 
 protected:
 	//animation variables
 	float m_frame_time;
-	int m_current_frame;
 	const int m_num_of_frames = 4;
 	ANIMATION_STATES m_current_animation;
 
-	//Health variables
-	int maxHealth;
-	int currentHealth;
-	int fullBarWidth;
-	int healthBarWidth;
+	Health m_health;
 };

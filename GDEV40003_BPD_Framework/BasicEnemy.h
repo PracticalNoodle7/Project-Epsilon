@@ -24,7 +24,6 @@ public:
 	void ChasePlayer(Vector2D movment, float deltaTime);
 	Vector2D GetPlayerLocation();
 
-	void TakeDamage(int damageAmount);
 	void Dead();
 
 	//Health bar textures
@@ -35,8 +34,9 @@ public:
 	//Enemy state variables
 	bool m_player_found;
 	bool m_attacking;
-	bool m_damaged;
-	bool m_is_dead;
+
+		//Health variables
+	Health m_health;
 
 protected:
 	//animation variables
@@ -47,12 +47,6 @@ protected:
 	Vector2D Chase;
 	float Y;
 	float X;
-
-	//Health variables
-	int maxHealth;
-	int currentHealth;
-	int fullBarWidth;
-	int healthBarWidth;
 
 	Character* m_character;
 	Item* m_item;

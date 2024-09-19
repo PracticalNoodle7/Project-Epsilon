@@ -40,15 +40,63 @@ struct Vector2D
 	}
 };
 
-struct Velocity2D
+struct Health
 {
-	float x;
-	float y;
+
+	float m_max_health;
+	float m_current_health;
+	float m_full_bar_width;
+	float m_health_bar_width;
+
+	bool m_is_dead = false;
+	bool m_damaged = false;
+
+	Health(float initial_max_health, float initial_bar_width)
+	{
+		m_max_health = initial_max_health;
+		m_full_bar_width = initial_bar_width;
+		m_current_health = m_max_health;
+		m_health_bar_width = m_full_bar_width;
+	}
+
+	void HealthBar()
+	{
+		// Calculate the width of the health bar portion to display
+		m_health_bar_width = (m_current_health * m_full_bar_width) / m_max_health;
+	}
+
+	void TakeDamage(float m_damage)
+	{
+		if (!m_damaged)
+		{
+			m_current_health -= m_damage;
+			m_damaged = true;
+		}
+
+		if (m_current_health <= 0)
+		{
+			m_is_dead = true;
+		}
+	}
+};
+
+struct Damage
+{
+	float m_base_damage;
+
+	Damage(float initial_damage)
+	{
+		m_base_damage = initial_damage;
+	}
+
+	float GetDamage()
+	{
+		return m_base_damage;
+	}
 };
 
 enum SCREENS
 {
-	SCREEN_INTRO,
 	SCREEN_MENU,
 	SCREEN_LEVEL1,
 	SCREEN_LEVEL2,
@@ -56,7 +104,15 @@ enum SCREENS
 	SCREEN_HIGHSCORS
 };
 
-enum class FACING
+struct Menu
+{
+	int type;
+	SDL_Texture* imageTexture;
+	string imagePath;
+	float x, y;
+};
+
+enum FACING
 {
 	FACING_LEFT,
 	FACING_RIGHT,
@@ -117,7 +173,8 @@ struct Tile
 struct Slots
 {
 	int type;
-	SDL_Texture* imagePath;
+	SDL_Texture* imageTexture;
+	string imagePath;
 	float x, y;
 	int amount;
 	bool is_full;

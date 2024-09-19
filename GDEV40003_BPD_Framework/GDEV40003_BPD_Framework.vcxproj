@@ -139,12 +139,14 @@
     <ClCompile Include="GameScreen.cpp" />
     <ClCompile Include="GameScreenLevel1.cpp" />
     <ClCompile Include="GameScreenManager.cpp" />
+    <ClCompile Include="GameScreenMenu.cpp" />
     <ClCompile Include="Goblin.cpp" />
     <ClCompile Include="InventoryManager.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemManager.cpp" />
     <ClCompile Include="Level1BackgroundManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MenuManager.cpp" />
     <ClCompile Include="TestArena.cpp" />
     <ClCompile Include="Texture2D.cpp" />
   </ItemGroup>
@@ -162,11 +164,13 @@
     <ClInclude Include="GameScreen.h" />
     <ClInclude Include="GameScreenLevel1.h" />
     <ClInclude Include="GameScreenManager.h" />
+    <ClInclude Include="GameScreenMenu.h" />
     <ClInclude Include="Goblin.h" />
     <ClInclude Include="InventoryManager.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="Level1BackgroundManager.h" />
+    <ClInclude Include="MenuManager.h" />
     <ClInclude Include="TestArena.h" />
     <ClInclude Include="Texture2D.h" />
   </ItemGroup>

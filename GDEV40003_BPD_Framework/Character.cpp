@@ -2,18 +2,12 @@
 #include "Texture2D.h"
 #include "Constants.h"
 
-Character::Character(SDL_Renderer* renderer, Vector2D start_position) : GameObject(renderer, start_position)
+Character::Character(SDL_Renderer* renderer, Vector2D start_position) : GameObject(renderer, start_position), m_health(100, 128)
 {
 	//initialising moving variables
 	m_attacking = false;
 	m_frame_time = 0;
 	m_current_frame = 0;
-
-	//initialising character health
-	maxHealth = 100;
-	currentHealth = 100;
-	fullBarWidth = 128;
-	healthBarWidth = 128;
 
 	//load texture
 	if (m_texture != nullptr)
@@ -147,15 +141,14 @@ void Character::Render()
 
 	m_texture->Render(m_health_bar_boarder, SDL_FLIP_NONE, 0.0, srcRect, Vector2D(10, 10));
 
-	srcRect.w = healthBarWidth;
+	srcRect.w = m_health.m_health_bar_width;
 	m_texture->Render(m_health_bar, SDL_FLIP_NONE, 0.0, srcRect, Vector2D(10, 10));
 
 }
 
 void Character::Update(float deltaTime, SDL_Event e)
 {
-	// Calculate the width of the health bar portion to display
-	healthBarWidth = (currentHealth * fullBarWidth) / maxHealth;
+	m_health.HealthBar();
 
 	if (GameObject::m_is_moving && !m_attacking && !GameObject::m_rolling)
 	{
@@ -175,7 +168,7 @@ void Character::Update(float deltaTime, SDL_Event e)
 			m_current_frame = 0;
 		}
 
-		FrameUpdate(deltaTime, 0.15);
+		FrameUpdate(deltaTime, 0.12);
 	}
 	else if (m_rolling && !m_attacking)
 	{
@@ -199,7 +192,11 @@ void Character::Update(float deltaTime, SDL_Event e)
 		{
 		case SDL_BUTTON_LEFT:
 			m_attacking = true; 
-			GameObject::m_can_move = false;
+			m_can_move = false;
+			m_move_left = false;
+			m_move_right = false;
+			m_move_down = false;
+			m_move_up = false;
 			break;
 		}
 

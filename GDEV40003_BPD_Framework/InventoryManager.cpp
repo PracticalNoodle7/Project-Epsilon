@@ -25,9 +25,9 @@ int EquipmentSlot[3][2] = {
 	{0,0}
 };
 string categories[3][2] = {
-	{"weapon", "armor"},
-	{"shield", "helmet"},
-	{"potion", "amulet"}
+	{"Weapon", "Armor"},
+	{"Shield", "Helmet"},
+	{"Potion", "Amulet"}
 };
 
 InventoryManager::InventoryManager(SDL_Renderer* renderer)
@@ -89,7 +89,7 @@ void InventoryManager::Render()
 			case 0:
 				srcRect.x = 0, srcRect.y = 0, srcRect.w = 32, srcRect.h = 32;
 				m_texture->Render(m_empty_slot, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
-				m_texture->Render(m_inv_slot[row][column].imagePath, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+				m_texture->Render(m_inv_slot[row][column].imageTexture, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 				break;
 			}
 		}
@@ -108,7 +108,7 @@ void InventoryManager::Render()
 			case 0:
 				srcRect.x = 0, srcRect.y = 0, srcRect.w = 64, srcRect.h = 64;
 				m_texture->Render(m_empty_slot, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
-				m_texture->Render(m_equip_slot[row][column].imagePath, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+				m_texture->Render(m_equip_slot[row][column].imageTexture, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 				break;
 			}
 		}
@@ -124,7 +124,8 @@ void InventoryManager::LoadInventory(int arr[10][15])
 			m_inv_slot[row][column].type = arr[row][column];
 			m_inv_slot[row][column].x = (column + 13) * 40;
 			m_inv_slot[row][column].y = (row + 3) * 40;
-			m_inv_slot[row][column].imagePath = m_empty_slot;
+			m_inv_slot[row][column].imageTexture = m_empty_slot;
+			m_inv_slot[row][column].imagePath = "images/Inventory/EmptySlot.png";
 			m_inv_slot[row][column].amount = 0;
 			m_inv_slot[row][column].is_full = false;
 		}
@@ -140,7 +141,7 @@ void InventoryManager::LoadEquip(int arr[3][2])
 			m_equip_slot[row][column].type = arr[row][column];
 			m_equip_slot[row][column].x = (column + 1.5) * 100;
 			m_equip_slot[row][column].y = (row + 1.75) * 70;
-			m_equip_slot[row][column].category = m_categories[row][column];
+			m_equip_slot[row][column].category = categories[row][column];
 			m_equip_slot[row][column].amount = 0;
 			m_equip_slot[row][column].is_full = false;
 		}
@@ -153,16 +154,24 @@ void InventoryManager::AddToInventory(string imagePath, int amount)
 	{
 		for (int column = 0; column < 15; column++)
 		{
-			if (m_inv_slot[row][column].is_full)
+			if (m_inv_slot[row][column].imagePath == imagePath && !m_inv_slot[row][column].is_full)
 			{
-				// Slot is full, check if there is another space
+				// Checking if there is space within the slot to add the new items to
 				CheckSlotForSpace(imagePath, amount, row, column);
-				return;  // Exit the function after placing the item or checking the slot
+				return;
 			}
-			else
+		}
+	}
+
+	for (int row = 0; row < 10; row++)
+	{
+		for (int column = 0; column < 15; column++)
+		{
+			if (m_inv_slot[row][column].imageTexture == m_empty_slot)
 			{
 				// Slot is not full, add the item here
-				m_inv_slot[row][column].imagePath = m_texture->LoadFromTileMap(imagePath);
+				m_inv_slot[row][column].imagePath = imagePath;
+				m_inv_slot[row][column].imageTexture = m_texture->LoadFromTileMap(m_inv_slot[row][column].imagePath);
 
 				// Check if the amount can fit in this slot (max 20 per slot)
 				if (amount <= 20)
@@ -174,7 +183,7 @@ void InventoryManager::AddToInventory(string imagePath, int amount)
 					{
 						m_inv_slot[row][column].is_full = true;
 					}
-
+						
 					// Remove the item from the world
 					m_item->RemoveItem(imagePath);
 
@@ -252,8 +261,13 @@ void InventoryManager::Update(float deltaTime, SDL_Event e)
 						y >= slotY && y <= slotY + slotHeight)
 					{
 						// Slot at (row, column) is clicked
-						HandleSlotClick(row, column);
-						break;
+
+						if (m_inv_slot[row][column].imageTexture != m_empty_slot)
+						{
+							int item = ItemManager::Instance(m_renderer, Vector2D())->GetItemData(m_inv_slot[row][column].imagePath);
+							HandleSlotClick(row, column, item);
+							break;
+						}
 					}
 				}
 			}
@@ -282,44 +296,67 @@ void InventoryManager::Update(float deltaTime, SDL_Event e)
 	}
 }
 
-void InventoryManager::HandleSlotClick(int row, int column)
+void InventoryManager::HandleSlotClick(int inv_row, int inv_column, int item)
 {
-	if (m_inv_slot[row][column].imagePath != m_empty_slot)
+	// Ensure 'item' is within the bounds of the vector to avoid out-of-bounds errors
+	if (item >= 0 && item < ItemManager::Instance(m_renderer, Vector2D())->m_items.size())
 	{
-		if (m_inv_slot[row][column].category == "weapon")
-		{
+		// Get the item category from the vector
+		std::string itemCategory = ItemManager::Instance(m_renderer, Vector2D())->m_items[item].category;
 
-		}
-		else if (m_inv_slot[row][column].category == "armor")
+		// Check for clicks in equipment slots
+		for (int row = 0; row < 3; row++)
 		{
+			for (int column = 0; column < 2; column++)
+			{
+				// Compare the categories and check if the slot is not full
+				if (m_equip_slot[row][column].category == itemCategory && !m_equip_slot[row][column].is_full)
+				{
+					// Slot is not full, add the item here
+					m_equip_slot[row][column].imagePath = m_inv_slot[inv_row][inv_column].imagePath;
+					m_equip_slot[row][column].imageTexture = m_texture->LoadFromTileMap(m_inv_slot[inv_row][inv_column].imagePath);
+					m_equip_slot[row][column].is_full = true;
 
+					// Clear the inventory slot
+					EmptyInvSlot(inv_row, inv_column);
+					return; // Once item is placed, exit loop
+				}
+			}
 		}
-		else if (m_inv_slot[row][column].category == "shield")
-		{
-
-		}
-		else if (m_inv_slot[row][column].category == "helmet")
-		{
-
-		}
-		else if (m_inv_slot[row][column].category == "potion")
-		{
-
-		}
-		else if (m_inv_slot[row][column].category == "amulet")
-		{
-
-		}
+	}
+	else
+	{
+		std::cout << "Item index out of bounds: " << item << std::endl;
 	}
 }
 
 void InventoryManager::HandleEquipSlotClick(int row, int column)
 {
-	if (m_equip_slot[row][column].imagePath != m_empty_slot)
+	if (m_equip_slot[row][column].imageTexture != m_empty_slot)
 	{
-		//AddToInventory(m_equip_slot[row][column].imagePath, m_equip_slot[row][column].amount);
+		AddToInventory(m_equip_slot[row][column].imagePath, m_equip_slot[row][column].amount);
+		EmptyEquipSlot(row, column);
 	}
 }
+
+void InventoryManager::EmptyInvSlot(int row, int column)
+{
+	m_inv_slot[row][column].imagePath = "images/Inventory/EmptySlot.png";
+	m_inv_slot[row][column].imageTexture = m_empty_slot;
+	m_inv_slot[row][column].is_full = false;
+	m_inv_slot[row][column].amount = 0;
+	m_inv_slot[row][column].category = "None";
+
+}
+
+void InventoryManager::EmptyEquipSlot(int row, int column)
+{
+	m_equip_slot[row][column].imagePath = "images/Inventory/EmptySlot.png";
+	m_equip_slot[row][column].imageTexture = m_empty_slot;
+	m_equip_slot[row][column].is_full = false;
+	m_equip_slot[row][column].amount = 0;
+}
+
 
 
 

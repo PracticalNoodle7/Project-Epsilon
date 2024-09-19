@@ -3,6 +3,7 @@
 #include "Constants.h"
 #include "Character.h"
 #include "Item.h"
+#include <ctime>
 
 string m_drop_items[3]
 {
@@ -11,13 +12,11 @@ string m_drop_items[3]
     "images/Tiles/tile_0101.png"
 };
 
-BasicEnemy::BasicEnemy(SDL_Renderer* renderer, Vector2D start_position) : GameObject(renderer, start_position)
+BasicEnemy::BasicEnemy(SDL_Renderer* renderer, Vector2D start_position) : GameObject(renderer, start_position), m_health(100, 24)
 {
 	//initialising moving variables
 	m_attacking = false;
-    m_damaged = false;
     m_player_found = false;
-    m_is_dead = false;
 	m_frame_time = 0;
 	m_current_frame = 0;
     m_num_of_frames = 0;
@@ -26,12 +25,6 @@ BasicEnemy::BasicEnemy(SDL_Renderer* renderer, Vector2D start_position) : GameOb
     Y = 0;
     X = 0;
 
-	//initialising enemy health
-	maxHealth = 100;
-	currentHealth = maxHealth;
-	fullBarWidth = 24;
-	healthBarWidth = 24;
-
 	//load texture
 	if (m_texture != nullptr)
 	{
@@ -39,6 +32,8 @@ BasicEnemy::BasicEnemy(SDL_Renderer* renderer, Vector2D start_position) : GameOb
 		m_health_bar = m_texture->LoadFromTileMap("images/Enemy/Health_bar.png");
 		m_health_bar_boarder = m_texture->LoadFromTileMap("images/Enemy/HealthBar_Boarder.png");
 	}
+
+    srand(time(NULL));
 }
 
 BasicEnemy::~BasicEnemy()
@@ -119,14 +114,18 @@ void BasicEnemy::Render()
 
     m_texture->Render(m_health_bar_boarder, SDL_FLIP_NONE, 0.0, srcRect, Vector2D(m_position.x + 12, m_position.y + 3));
 
-    srcRect.w = healthBarWidth;
+    srcRect.w = m_health.m_health_bar_width;
     m_texture->Render(m_health_bar, SDL_FLIP_NONE, 0.0, srcRect, Vector2D(m_position.x + 12, m_position.y + 3));
 }
 
 void BasicEnemy::Update(float deltaTime, SDL_Event e)
 {
-    // Calculate the width of the health bar portion to display
-    healthBarWidth = (currentHealth * fullBarWidth) / maxHealth;
+    m_health.HealthBar();
+
+    if (m_health.m_is_dead)
+    {
+        Dead();
+    }
 
     // Calculate the different between the players position and the enemy position
     if (!m_attacking && m_character != nullptr)
@@ -135,11 +134,11 @@ void BasicEnemy::Update(float deltaTime, SDL_Event e)
         X = m_character->m_position.x - m_position.x;
     }
 
-    if (m_damaged)
+    if (m_health.m_damaged)
     {
         if (!m_character->m_attacking)
         {
-            m_damaged = false;
+            m_health.m_damaged = false;
         }
     }
 
@@ -179,31 +178,31 @@ void BasicEnemy::Update(float deltaTime, SDL_Event e)
 
     Vector2D movement(0.0f, 0.0f);  // Initialize movement vector
 
-    if (m_can_move)
+    if (m_can_move && !GameObject::m_rolling)
     {
         // Calculate movement vector
-        if (m_move_up)
+        if (m_character->m_move_up)
         {
             movement.y += 1;
         }
-        if (m_move_left)
+        if (m_character->m_move_left)
         {
             movement.x += 1;
         }
-        if (m_move_down)
+        if (m_character->m_move_down)
         {
             movement.y -= 1;
         }
-        if (m_move_right)
+        if (m_character->m_move_right)
         {
             movement.x -= 1;
         }
+    }
 
         if (GameObject::m_rolling)
         {
             Rolling(movement, deltaTime);
         }
-
 
         // Normalize the movement vector to prevent faster diagonal movement
         if (movement.x != 0 || movement.y != 0)
@@ -217,60 +216,6 @@ void BasicEnemy::Update(float deltaTime, SDL_Event e)
                 Move(movement, deltaTime);
             }
         }
-
-        // Handle the events
-        switch (e.type)
-        {
-        case SDL_KEYDOWN:
-
-            switch (e.key.keysym.sym)
-            {
-                // Press W to move up
-            case SDLK_w:
-                m_move_up = true;
-                break;
-
-                // Press A to move left
-            case SDLK_a:
-                m_move_left = true;
-                break;
-
-                // Press S to move down
-            case SDLK_s:
-                m_move_down = true;
-                break;
-
-                // Press D to move right
-            case SDLK_d:
-                m_move_right = true;
-                break;
-            }
-            break;
-        case SDL_KEYUP:
-            switch (e.key.keysym.sym)
-            {
-                // Check if W is up
-            case SDLK_w:
-                m_move_up = false;
-                break;
-
-                // Check if A is up
-            case SDLK_a:
-                m_move_left = false;
-                break;
-
-                // Check if S is up
-            case SDLK_s:
-                m_move_down = false;
-                break;
-
-                // Check if D is up
-            case SDLK_d:
-                m_move_right = false;
-                break;
-            }
-        }
-    }
 
     if (m_player_found && !m_attacking)
     {
@@ -319,7 +264,6 @@ Rect2D BasicEnemy::GetAttackCollision()
     {
         return Rect2D(m_position.x, m_position.y - 1, m_texture->GetWidth(), m_texture->GetHeight());
     }
-
 }
 
 void BasicEnemy::Move(Vector2D movement, float deltaTime)
@@ -334,22 +278,22 @@ void BasicEnemy::Rolling(Vector2D movement, float deltaTime)
     switch (m_facing_direction)
     {
     case FACING::FACING_RIGHT:
-        movement.x -= 0.5;
+        movement.x -= 1.5;
         movement.y = 0;
         break;
 
     case FACING::FACING_LEFT:
-        movement.x += 0.5;
+        movement.x += 1.5;
         movement.y = 0;
         break;
 
     case FACING::FACING_DOWN:
-        movement.y -= 0.5;
+        movement.y -= 1.5;
         movement.x = 0;
         break;
 
     case FACING::FACING_UP:
-        movement.y += 0.5;
+        movement.y += 1.5;
         movement.x = 0;
         break;
     }
@@ -398,25 +342,12 @@ Vector2D BasicEnemy::GetPlayerLocation()
     return Chase;
 }
 
-void BasicEnemy::TakeDamage(int damageAmount)
-{
-    if (!m_damaged)
-    {
-        currentHealth -= damageAmount;
-        cout << currentHealth << endl;
-        m_damaged = true;
-    }
-
-    if (currentHealth <= 0)
-    {
-        Dead();
-        m_is_dead = true;
-    }
-}
-
 void BasicEnemy::Dead()
 {
     int m_quantity = (rand() % 4) + 1;
-    m_item->DropItem(m_drop_items[rand() % 3], Vector2D(m_position.x, m_position.y), m_quantity);
+    int m_item_num = (rand() % 3);
+
+    cout << m_item_num << endl;
+    m_item->DropItem(m_drop_items[m_item_num], Vector2D(m_position.x, m_position.y), m_quantity);
 }
 
