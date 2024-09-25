@@ -19,6 +19,7 @@ public:
 
 	Character* GetCharacter();
 	static bool s_start_level_1;
+	static bool s_start_the_rift;
 private:
 
 	SDL_Renderer* m_renderer;

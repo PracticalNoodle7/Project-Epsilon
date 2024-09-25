@@ -113,6 +113,7 @@ bool GameScreenLevel1::SetUpLevel1()
 	ItemManager::Instance(m_renderer, Vector2D())->SetUpItems();
 
 	m_test_arena->SetLevel1BackgroundPointer(m_background);
+	m_background->SetCharacter(m_character);
 
 	return true;
 }

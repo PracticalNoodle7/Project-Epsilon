@@ -63,7 +63,7 @@ bool InitSDL()
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
 	// Create window
-	g_window = SDL_CreateWindow("Project A", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+	g_window = SDL_CreateWindow("Project Rouge", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	if (g_window == nullptr)
 	{
 		// Window failed
@@ -142,7 +142,7 @@ bool Update()
 void Render()
 {
 	//Clear the screen
-	SDL_SetRenderDrawColor(g_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+	SDL_SetRenderDrawColor(g_renderer, 0, 0, 0, 0);
 	SDL_RenderClear(g_renderer);
 
 	game_screen_manager->Render();

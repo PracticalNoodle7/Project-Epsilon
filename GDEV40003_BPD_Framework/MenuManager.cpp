@@ -68,7 +68,7 @@ void MenuManager::Update(float deltaTime, SDL_Event e)
 					if (m_menu[i].imagePath == "images/Menu/StartButton.png")
 					{
 						cout << "START" << endl;
-						GameScreenManager::s_start_level_1 = true;
+						GameScreenManager::s_start_the_rift = true;
 						break;
 					}
 					else if (m_menu[i].imagePath == "images/Menu/SettingsButton.png")

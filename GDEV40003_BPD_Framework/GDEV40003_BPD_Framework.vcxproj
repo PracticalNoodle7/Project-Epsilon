@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BackgroundManager.cpp" />
     <ClCompile Include="BasicEnemy.cpp" />
     <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Character.cpp" />
@@ -140,6 +141,7 @@
     <ClCompile Include="GameScreenLevel1.cpp" />
     <ClCompile Include="GameScreenManager.cpp" />
     <ClCompile Include="GameScreenMenu.cpp" />
+    <ClCompile Include="GameScreenTheRift.cpp" />
     <ClCompile Include="Goblin.cpp" />
     <ClCompile Include="InventoryManager.cpp" />
     <ClCompile Include="Item.cpp" />
@@ -149,11 +151,13 @@
     <ClCompile Include="MenuManager.cpp" />
     <ClCompile Include="TestArena.cpp" />
     <ClCompile Include="Texture2D.cpp" />
+    <ClCompile Include="TheRiftBackground.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BackgroundManager.h" />
     <ClInclude Include="BasicEnemy.h" />
     <ClInclude Include="Bat.h" />
     <ClInclude Include="Character.h" />
@@ -165,6 +169,7 @@
     <ClInclude Include="GameScreenLevel1.h" />
     <ClInclude Include="GameScreenManager.h" />
     <ClInclude Include="GameScreenMenu.h" />
+    <ClInclude Include="GameScreenTheRift.h" />
     <ClInclude Include="Goblin.h" />
     <ClInclude Include="InventoryManager.h" />
     <ClInclude Include="Item.h" />
@@ -173,6 +178,7 @@
     <ClInclude Include="MenuManager.h" />
     <ClInclude Include="TestArena.h" />
     <ClInclude Include="Texture2D.h" />
+    <ClInclude Include="TheRiftBackground.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

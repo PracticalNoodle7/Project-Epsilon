@@ -95,9 +95,16 @@ struct Damage
 	}
 };
 
+enum Layer
+{
+	BACKGROUND,
+	WALLS,
+};
+
 enum SCREENS
 {
 	SCREEN_MENU,
+	SCREEN_THE_RIFT,
 	SCREEN_LEVEL1,
 	SCREEN_LEVEL2,
 	SCREEN_GAMEOVER,

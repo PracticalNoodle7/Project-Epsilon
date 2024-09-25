@@ -1,10 +1,12 @@
 #include "GameScreenManager.h"
 #include "GameScreenLevel1.h"
 #include "GameScreenMenu.h"
+#include "GameScreenTheRift.h"
 #include "GameScreen.h"
 #include "Character.h"
 
 bool GameScreenManager::s_start_level_1 = false;
+bool GameScreenManager::s_start_the_rift = false;
 
 GameScreenManager::GameScreenManager(SDL_Renderer* renderer, SCREENS startScreen)
 {
@@ -31,6 +33,11 @@ void GameScreenManager::Render()
 		ChangeScreen(SCREEN_LEVEL1);
 		s_start_level_1 = false;
 	}
+	else if (s_start_the_rift)
+	{
+		ChangeScreen(SCREEN_THE_RIFT);
+		s_start_the_rift = false;
+	}
 }
 
 void GameScreenManager::Update(float deltaTime, SDL_Event e)
@@ -54,6 +61,13 @@ void GameScreenManager::ChangeScreen(SCREENS new_screen)
 		tempScreenMenu = new GameScreenMenu(m_renderer);
 		m_current_screen = (GameScreen*)tempScreenMenu;
 		tempScreenMenu = nullptr;
+		break;
+
+	case SCREEN_THE_RIFT:
+		GameScreenTheRift* tempScreenTheRift;
+		tempScreenTheRift = new GameScreenTheRift(m_renderer);
+		m_current_screen = (GameScreen*)tempScreenTheRift;
+		tempScreenTheRift = nullptr;
 		break;
 
 	case SCREEN_LEVEL1:
