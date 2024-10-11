@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "Texture2D.h"
 #include "Character.h"
+#include "BackgroundManager.h"
 
 FACING GameObject::m_facing_direction = FACING::FACING_RIGHT;
 bool GameObject::m_is_moving = false;
@@ -205,9 +206,3 @@ float GameObject::GetCollisionRadius(Collision_Type Type)
 		return m_collision_radius_attack;
 	}
 }
-
-
-
-
-
-

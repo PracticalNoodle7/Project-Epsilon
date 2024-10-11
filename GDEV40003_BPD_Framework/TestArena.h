@@ -22,14 +22,21 @@ public:
     void SetLevel1BackgroundPointer(Level1BackgroundManager* m_background) { m_level1background = m_background; }
 
 private:
-    void SpawnWave(int numberOfEnemies);
+    void IncreaseWave();
+    void SpawnEnemies();
     void RemoveDeadEnemies();
 
     SDL_Renderer* m_renderer;
 
     int m_currentWave;
-    float m_waveTimer;
-    const float WAVE_INTERVAL = 5.0f; // Interval between waves in seconds 
+    int m_num_of_enemies;
+    int m_total_enemies_spawned;
+    int m_target_for_next_wave;
+
+    float m_spawn_intervals;
+    float m_spawn_timer;
+
+    bool m_wave_triggered;
 
     Character* m_character;
     Goblin* enemy;

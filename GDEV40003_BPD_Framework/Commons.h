@@ -89,7 +89,7 @@ struct Damage
 		m_base_damage = initial_damage;
 	}
 
-	float GetDamage()
+	float const GetDamage()
 	{
 		return m_base_damage;
 	}
@@ -99,6 +99,8 @@ enum Layer
 {
 	BACKGROUND,
 	WALLS,
+	STAIRS,
+	PROPS
 };
 
 enum SCREENS
@@ -146,7 +148,7 @@ enum ANIMATION_STATES
 enum Collision_Type
 {
 	CHASE,
-	ATTACK
+	ATTACK,
 };
 
 struct Rect2D
@@ -171,10 +173,19 @@ struct Camera
 	float width, height;
 };
 	
+enum TileType
+{
+	LEFT,
+	RIGHT,
+	TOP,
+	BOTTOM
+};
+
 struct Tile
 {
 	int type;
-	float x, y;
+	float x, y, width, height;
+	TileType tile;
 };
 
 struct Slots

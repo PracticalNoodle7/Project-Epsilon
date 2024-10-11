@@ -42,17 +42,23 @@ void GameScreenTheRift::Update(float deltaTime, SDL_Event e)
 	//Update inventory
 	InventoryManager::Instance(m_renderer)->Update(deltaTime, e);
 
-	UpdateCollions();
+	UpdateCollions(deltaTime);
 }
 
-void GameScreenTheRift::UpdateCollions()
+void GameScreenTheRift::UpdateCollions(float deltaTime)
 {
 	// Loop over each row
-	for (const auto& row : m_background->m_wall_map) 
+	for (size_t row = 0; row < m_background->m_wall_map.size(); ++row) 
 	{
-		if (Collisions::Instance()->Box(m_character->GetCollisionBox(), row->GetCollisionBox()))
+		for (size_t column = 0; column < m_background->m_wall_map[row].size(); ++column) 
 		{
-
+			if (m_background->m_wall_map[row][column].type != 0)
+			{
+				if (Collisions::Instance()->Box(m_character->GetCollisionBox(), m_background, row, column))
+				{
+					m_background->PreventOutOfBounds(m_character, row, column, deltaTime);
+				}
+			}
 		}
 	}
 }

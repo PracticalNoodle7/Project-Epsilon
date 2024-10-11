@@ -1,4 +1,5 @@
 #include "Collisions.h"
+#include "BackgroundManager.h"
 
 //initialise instance to nullptr
 Collisions* Collisions::m_instance = nullptr;
@@ -56,4 +57,41 @@ bool Collisions::Box(Rect2D rect1, Rect2D rect2)
 	}
 
 	return false;
+}
+
+bool Collisions::Box(Rect2D rect1, BackgroundManager* m_background, int row, int column)
+{
+	int x = m_background->m_wall_map[row][column].x;
+	int y = m_background->m_wall_map[row][column].y;
+	int height = m_background->m_wall_map[row][column].height;
+	int width = m_background->m_wall_map[row][column].width;
+
+
+
+	switch (m_background->m_wall_map[row][column].type)
+	{
+	case 7:
+		width = m_background->m_wall_map[row][column].width / 2;
+		break;
+
+	case 9:
+		height = m_background->m_wall_map[row][column].height / 2;
+		break;
+
+	case 11:
+		width = m_background->m_wall_map[row][column].width / 2;
+		x = m_background->m_wall_map[row][column].x + m_background->m_wall_map[row][column].width;
+		break;
+	}
+
+
+	if (rect1.x + rect1.width > x &&
+		rect1.x < x + width &&
+		rect1.y + rect1.height > y &&
+		rect1.y < y + height)
+	{
+		return true;
+	}
+
+		return false;
 }

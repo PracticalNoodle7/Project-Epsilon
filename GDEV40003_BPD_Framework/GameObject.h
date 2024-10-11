@@ -7,6 +7,7 @@ using namespace std;
 
 //foward declarations
 class Texture2D;
+class BackgroundManager;
 
 class GameObject
 {
@@ -21,7 +22,7 @@ public:
 	void ChangeFacingDirection(FACING new_Direction) { GameObject::m_facing_direction = new_Direction; };
 	void ChangeMovingBool(bool new_state) { GameObject::m_is_moving = new_state; };
 
-	Rect2D GetCollisionBox() { return Rect2D(m_position.x, m_position.y, 3, 3); }
+	Rect2D GetCollisionBox() { return Rect2D(m_position.x, m_position.y, 32, 32); }
 	virtual Rect2D GetAttackCollision();
 	float GetCollisionRadius(Collision_Type Type);
 

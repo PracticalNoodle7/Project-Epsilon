@@ -18,7 +18,9 @@ public:
 	void Update(float deltaTime, SDL_Event e) override;
 
 	void Move(Vector2D movement, float deltaTime);
+	void MoveBack(Vector2D movement, float deltaTime);
 	void Rolling(Vector2D movement, float deltaTime);
+	void PreventOutOfBounds(Character* m_character, int row, int column, float deltaTime);
 
 	void SetSpawnPoints();
 	bool IsSpawnNearPlayer(int row, int column);
@@ -30,8 +32,11 @@ public:
 	vector<vector<int>> levelMap;
 	vector<vector<Tile>> m_background_map;
 	vector<vector<Tile>> m_wall_map;
+	vector<vector<Tile>> m_staire_map;
+	vector<vector<Tile>> m_prop_map;
 protected:
 	int rows, columns;
 	float m_movment_speed;
 	Character* m_character;
+	Vector2D movement;
 };

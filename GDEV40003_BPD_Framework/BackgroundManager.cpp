@@ -8,6 +8,7 @@ BackgroundManager::BackgroundManager(SDL_Renderer* renderer, Vector2D start_posi
     rows = 0;
     columns = 0;
     m_movment_speed = 1;
+    movement.x = movement.y = 0;
 }
 
 BackgroundManager::~BackgroundManager()
@@ -26,6 +27,12 @@ BackgroundManager::~BackgroundManager()
 
     m_wall_map.clear();
     m_wall_map.shrink_to_fit();
+
+    m_staire_map.clear();
+    m_staire_map.shrink_to_fit();
+
+    m_prop_map.clear();
+    m_prop_map.shrink_to_fit();
 }
 
 void BackgroundManager::LoadTileMapFromFile(const std::string& fileName, std::vector<std::vector<int>>& tileMap, int& rows, int& columns, Layer layer)
@@ -85,14 +92,75 @@ void BackgroundManager::LoadTileMapFromFile(const std::string& fileName, std::ve
 
        for (int row = 0; row < rows; row++)
        {
-            for (int column = 0; column < columns; column++)
-            {
-                m_wall_map[row][column].type = levelMap[row][column];
-                m_wall_map[row][column].x = (column + 5) * 31;
-                m_wall_map[row][column].y = (row + 5) * 31;
-            }
+           for (int column = 0; column < columns; column++)
+           {
+               m_wall_map[row][column].type = levelMap[row][column];
+               m_wall_map[row][column].x = (column + 5) * 31;
+               m_wall_map[row][column].y = (row + 5) * 31;
+               m_wall_map[row][column].width = 32;
+               m_wall_map[row][column].height = 32;
+
+               switch (m_wall_map[row][column].type)
+               {
+               case 7:
+                   m_wall_map[row][column].tile = LEFT;
+                   break;
+
+               case 9:
+                   m_wall_map[row][column].tile = TOP;
+                   break;
+
+               case 11:
+                   m_wall_map[row][column].tile = RIGHT;
+                   break;
+
+               default:
+                   m_wall_map[row][column].tile = BOTTOM;
+                   break;
+               }
+           }
        }
        break;
+
+    case STAIRS:
+        m_staire_map.resize(rows, std::vector<Tile>(columns));
+
+        for (int row = 0; row < rows; row++)
+        {
+            for (int column = 0; column < columns; column++)
+            {
+                m_staire_map[row][column].type = levelMap[row][column];
+                m_staire_map[row][column].x = (column + 5) * 31;
+                m_staire_map[row][column].y = (row + 5) * 31;
+
+                switch (m_staire_map[row][column].type)
+                {
+                case 1 || 3 || 5:
+                    m_staire_map[row][column].tile = LEFT;
+                    break;
+
+                default:
+                    m_staire_map[row][column].tile = RIGHT;
+                    break;
+                }
+            }
+        }
+        break;
+
+    case PROPS:
+        m_prop_map.resize(rows, std::vector<Tile>(columns));
+
+        for (int row = 0; row < rows; row++)
+        {
+            for (int column = 0; column < columns; column++)
+            {
+                m_prop_map[row][column].type = levelMap[row][column];
+                m_prop_map[row][column].x = (column + 5) * 31;
+                m_prop_map[row][column].y = (row + 5) * 31;
+            }
+        }
+        break;
+
     }
 }
 
@@ -105,7 +173,7 @@ void BackgroundManager::Update(float deltaTime, SDL_Event e)
 {
     m_is_moving = false;  // Assume not moving by default
 
-    Vector2D movement(0.0f, 0.0f);  // Initialize movement vector
+    movement.x = movement.y = 0;
 
     if (m_can_move && !GameObject::m_rolling)
     {
@@ -133,8 +201,6 @@ void BackgroundManager::Update(float deltaTime, SDL_Event e)
         Rolling(movement, deltaTime);
     }
 
-
-
     // Normalize the movement vector to prevent faster diagonal movement
     if (movement.x != 0 || movement.y != 0)
     {
@@ -146,7 +212,6 @@ void BackgroundManager::Update(float deltaTime, SDL_Event e)
         {
             Move(movement, deltaTime);
         }
-
     }
 
     // Handle the events
@@ -218,6 +283,12 @@ void BackgroundManager::Move(Vector2D movement, float deltaTime)
                 m_wall_map[row][column].x += movement.x * deltaTime * 200;
                 m_wall_map[row][column].y += movement.y * deltaTime * 200;
             }
+
+            if (m_staire_map.size() != 0)
+            {
+                m_staire_map[row][column].x += movement.x * deltaTime * 200;
+                m_staire_map[row][column].y += movement.y * deltaTime * 200;
+            }
         }
     }
 
@@ -236,6 +307,31 @@ void BackgroundManager::Move(Vector2D movement, float deltaTime)
     else if (movement.x < 0)
     {
         ChangeFacingDirection(FACING::FACING_RIGHT);
+    }
+}
+
+void BackgroundManager::MoveBack(Vector2D movement, float deltaTime)
+{
+    // Apply movement to the tile map
+    for (int row = 0; row < rows; row++)
+    {
+        for (int column = 0; column < columns; column++)
+        {
+            m_background_map[row][column].x += movement.x * deltaTime * 200;
+            m_background_map[row][column].y += movement.y * deltaTime * 200;
+
+            if (m_wall_map.size() != 0)
+            {
+                m_wall_map[row][column].x += movement.x * deltaTime * 200;
+                m_wall_map[row][column].y += movement.y * deltaTime * 200;
+            }
+
+            if (m_staire_map.size() != 0)
+            {
+                m_staire_map[row][column].x += movement.x * deltaTime * 200;
+                m_staire_map[row][column].y += movement.y * deltaTime * 200;
+            }
+        }
     }
 }
 
@@ -277,7 +373,89 @@ void BackgroundManager::Rolling(Vector2D movement, float deltaTime)
                 m_wall_map[row][column].x += movement.x * deltaTime * 200;
                 m_wall_map[row][column].y += movement.y * deltaTime * 200;
             }
+
+            if (m_staire_map.size() != 0)
+            {
+                m_staire_map[row][column].x += movement.x * deltaTime * 200;
+                m_staire_map[row][column].y += movement.y * deltaTime * 200;
+            }
         }
+    }
+}
+
+void BackgroundManager::PreventOutOfBounds(Character* m_character, int row, int column, float deltaTime)
+{
+    Vector2D Difference;
+
+    Difference.x = m_wall_map[row][column].x - m_character->m_position.x;
+    Difference.y = m_wall_map[row][column].y - m_character->m_position.y;
+
+    switch (m_wall_map[row][column].tile)
+    {
+    case LEFT:
+
+        if (Difference.x < 0)
+        {
+            movement.x -= 2;
+        }
+        else
+        {
+            movement.x += 2;
+        }
+        break;
+
+    case RIGHT:
+
+        if (Difference.x < -5)
+        {
+            movement.x -= 2;
+        }
+        else
+        {
+            movement.x += 2;
+        }
+        break;
+
+    case TOP:
+
+        if (Difference.y < 0)
+        {
+            movement.y -= 2;
+        }
+        else
+        {
+            movement.y += 2;
+        }
+        break;
+
+    case BOTTOM:
+
+        if (Difference.y < 0)
+        {
+            movement.y -= 2;
+        }
+        else
+        {
+            movement.y += 2;
+        }
+
+        if (Difference.x < 0)
+        {
+            movement.x -= 2;
+        }
+        else
+        {
+            movement.x += 2;
+        }
+
+    }
+
+    // Normalize the movement vector to prevent faster diagonal movement
+    if (movement.x != 0 || movement.y != 0)
+    {
+        movement = movement.Normalize();
+
+        MoveBack(movement, deltaTime);
     }
 }
 

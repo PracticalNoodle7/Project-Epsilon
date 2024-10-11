@@ -14,7 +14,7 @@ public:
 
 	void Render() override;
 	void Update(float deltaTime, SDL_Event e) override;
-	void UpdateCollions();
+	void UpdateCollions(float deltaTime);
 
 	Character* GetCharacter() override;
 

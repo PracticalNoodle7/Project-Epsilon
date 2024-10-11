@@ -9,10 +9,13 @@ TheRiftBackground::TheRiftBackground(SDL_Renderer* renderer, Vector2D start_posi
 		m_grass = m_texture->LoadFromTileMap("images/Overworld_Tile/TX Tileset Grass 2.png");
 		m_stone = m_texture->LoadFromTileMap("images/Overworld_Tile/TX Tileset Stone Ground.png");
 		m_walls = m_texture->LoadFromTileMap("images/Overworld_Tile/TX Tileset Wall.png");
+		m_staire = m_texture->LoadFromTileMap("images/Overworld_Tile/TX Struct.png");
 	}
 
 	LoadTileMapFromFile("TextFiles/TheRift/TheRiftBackground.txt", levelMap, rows, columns, BACKGROUND);
 	LoadTileMapFromFile("TextFiles/TheRift/TheRiftWalls.txt", levelMap, rows, columns, WALLS);
+	LoadTileMapFromFile("TextFiles/TheRift/TheRiftStairs.txt", levelMap, rows, columns, STAIRS);
+	LoadTileMapFromFile("TextFiles/TheRift/TheRiftProps.txt", levelMap, rows, columns, PROPS);
 }
 
 TheRiftBackground::~TheRiftBackground()
@@ -110,6 +113,39 @@ void TheRiftBackground::Render()
 			case 15:
 				srcRect.x = 128, srcRect.y = 128;
 				m_texture->Render(m_walls, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+				break;
+			}
+
+			m_position.x = m_staire_map[row][column].x;
+			m_position.y = m_staire_map[row][column].y;
+
+			switch (m_staire_map[row][column].type)
+			{
+			case 0:
+				break;
+			case 1:
+				srcRect.x = 32, srcRect.y = 32;
+				m_texture->Render(m_staire, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+				break;
+			case 2:
+				srcRect.x = 64, srcRect.y = 32;
+				m_texture->Render(m_staire, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+				break;
+			case 3:
+				srcRect.x = 32, srcRect.y = 64;
+				m_texture->Render(m_staire, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+				break;
+			case 4:
+				srcRect.x = 64, srcRect.y = 64;
+				m_texture->Render(m_staire, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+				break;
+			case 5:
+				srcRect.x = 32, srcRect.y = 96;
+				m_texture->Render(m_staire, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
+				break;
+			case 6:
+				srcRect.x = 64, srcRect.y = 96;
+				m_texture->Render(m_staire, srcRect, Vector2D(m_position.x, m_position.y), SDL_FLIP_NONE);
 				break;
 			}
 		}
