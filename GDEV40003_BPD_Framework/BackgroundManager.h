@@ -5,6 +5,7 @@
 #include <sstream>
 #include <vector>
 #include "Character.h"
+#include "GameObject.h"
 using namespace std;
 
 class BackgroundManager : public GameObject
@@ -21,6 +22,7 @@ public:
 	void MoveBack(Vector2D movement, float deltaTime);
 	void Rolling(Vector2D movement, float deltaTime);
 	void PreventOutOfBounds(Character* m_character, int row, int column, float deltaTime);
+	void PreventOutOfBounds(TileType direction, float deltaTime);
 
 	void SetSpawnPoints();
 	bool IsSpawnNearPlayer(int row, int column);

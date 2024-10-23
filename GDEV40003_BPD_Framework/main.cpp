@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 
 	if (InitSDL())
 	{
-		game_screen_manager = new GameScreenManager(g_renderer, SCREEN_MENU);
+		game_screen_manager = new GameScreenManager(g_renderer, SCREEN_LEVEL1);
 		//set the time
 		g_old_time = SDL_GetTicks();
 
@@ -156,11 +156,3 @@ void UpdateCamera(Character* character)
 	camera.x = character->m_position.x - (camera.width / 2);
 	camera.y = character->m_position.y - (camera.height / 2);
 }
-
-
-
-
-
-
-
-

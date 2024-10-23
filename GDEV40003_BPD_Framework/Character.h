@@ -1,6 +1,8 @@
 #pragma once
 #include "GameObject.h"
 
+class GameText;
+
 class Character : public GameObject
 {
 public:
@@ -25,11 +27,19 @@ public:
 	bool m_attacking;
 	int m_current_frame;
 
+	//Character stats
+	PlayerStats m_stats;
+	void UpdatePlayerStats(int row, int column, string state);
+
+	bool m_interact_text;
+
 protected:
 	//animation variables
 	float m_frame_time;
 	const int m_num_of_frames = 4;
 	ANIMATION_STATES m_current_animation;
 
-	Health m_health;
+	void PlayerDead();
+
+	GameText* m_text;
 };

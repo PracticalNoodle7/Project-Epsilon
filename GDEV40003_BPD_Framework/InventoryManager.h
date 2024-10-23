@@ -10,6 +10,7 @@
 //foward declarations
 class Texture2D;
 class Item;
+class GameText;
 
 class InventoryManager
 {
@@ -22,8 +23,11 @@ public:
 
 	void AddToInventory(string imagePath, int amount);
 	void SetItemPointer(Item* m_item) { this->m_item = m_item; };
+	void SetCharacterPointer(Character* m_character) { this->m_character = m_character; }
 
 	bool m_is_inventory_open;
+
+	Slots m_equip_slot[3][2];
 private:
 	InventoryManager(SDL_Renderer* renderer);
 	static InventoryManager* m_instance;
@@ -51,10 +55,11 @@ protected:
 
 	//array
 	Slots m_inv_slot[15][25];
-	Slots m_equip_slot[3][2];
 	string m_categories[3][2];
 
 	//pointers
 	Item* m_item;
+	Character* m_character;
+	GameText* m_text;
 };
 

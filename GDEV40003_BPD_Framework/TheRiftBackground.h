@@ -14,5 +14,6 @@ protected:
 	SDL_Texture* m_stone;
 	SDL_Texture* m_walls;
 	SDL_Texture* m_staire;
+	SDL_Texture* m_prop;
 };
 

@@ -25,9 +25,18 @@ ItemManager* ItemManager::Instance(SDL_Renderer* renderer, Vector2D start_positi
 
 void ItemManager::SetUpItems()
 {
-	AddItem("images/Tiles/tile_0103.png", "Weapon", 0, 10, 0, 0);
-	AddItem("images/Tiles/tile_0102.png", "Shield", 0, 0, 10, 0);
-	AddItem("images/Tiles/tile_0101.png", "Armor", 0, 0, 10, 0);
+	//weapons
+	AddItem("images/Items/tile_0103.png", "Weapon", 0, 10, 0, 0);
+	AddItem("images/Items/tile_0104.png", "Weapon", 0, 15, 0, 0);
+	AddItem("images/Items/tile_0105.png", "Weapon", 0, 25, 0, 0);
+	AddItem("images/Items/tile_0106.png", "Weapon", 0, 35, 0, 0);
+
+	//shields
+	AddItem("images/Items/tile_0102.png", "Shield", 0, 0, 10, 0);
+
+	//armor
+	AddItem("images/Items/tile_0123.png", "Armor", 0, 0, 15, 0);
+	AddItem("images/Items/tile_0124.png", "Armor", 0, 0, 25, 0);
 }
 
 void ItemManager::AddItem(string imagePath, string caregory, int consumable, int damage, int defence, int price)

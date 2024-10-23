@@ -1,13 +1,19 @@
 #include "Character.h"
 #include "Texture2D.h"
 #include "Constants.h"
+#include "ItemManager.h"
+#include "InventoryManager.h"
+#include "GameText.h"
 
-Character::Character(SDL_Renderer* renderer, Vector2D start_position) : GameObject(renderer, start_position), m_health(100, 128)
+Character::Character(SDL_Renderer* renderer, Vector2D start_position) : GameObject(renderer, start_position), m_stats(0, 0, 100, 128)
 {
 	//initialising moving variables
 	m_attacking = false;
 	m_frame_time = 0;
 	m_current_frame = 0;
+
+	m_width = 32;
+	m_height = 32;
 
 	//load texture
 	if (m_texture != nullptr)
@@ -19,6 +25,9 @@ Character::Character(SDL_Renderer* renderer, Vector2D start_position) : GameObje
 		m_health_bar = m_texture->LoadFromTileMap("images/Character/HealthBar.png");
 		m_health_bar_boarder = m_texture->LoadFromTileMap("images/Character/HealthBar_Boarder.png");
 	}
+
+	m_text = new GameText(m_renderer, "fonts/arial.ttf", 12);
+	m_interact_text = false;
 }
 
 Character::~Character()
@@ -37,7 +46,6 @@ Character::~Character()
 
 	delete m_health_bar_boarder;
 	m_health_bar_boarder = nullptr;
-
 }
 
 void Character::Render()
@@ -141,14 +149,25 @@ void Character::Render()
 
 	m_texture->Render(m_health_bar_boarder, SDL_FLIP_NONE, 0.0, srcRect, Vector2D(10, 10));
 
-	srcRect.w = m_health.m_health_bar_width;
+	srcRect.w = m_stats.m_health.m_health_bar_width;
 	m_texture->Render(m_health_bar, SDL_FLIP_NONE, 0.0, srcRect, Vector2D(10, 10));
+
+	if (m_interact_text)
+	{
+		m_text->SetColor({ 0, 0, 0, 255 });
+		m_text->RenderTextAt("Press F", m_position.x, m_position.y - 10);
+	}
 
 }
 
 void Character::Update(float deltaTime, SDL_Event e)
 {
-	m_health.HealthBar();
+	m_stats.m_health.HealthBar();
+
+	if (m_stats.m_health.m_current_health <= 0)
+	{
+		PlayerDead();
+	}
 
 	if (GameObject::m_is_moving && !m_attacking && !GameObject::m_rolling)
 	{
@@ -236,3 +255,67 @@ void Character::FrameUpdate(float deltaTime, float delay)
 	}
 }
 
+void Character::UpdatePlayerStats(int row, int column, string state)
+{
+	int itemID = ItemManager::Instance(m_renderer, Vector2D())->GetItemData(InventoryManager::Instance(m_renderer)->m_equip_slot[row][column].imagePath);
+
+	if (state == "Increase")
+	{
+		if (InventoryManager::Instance(m_renderer)->m_equip_slot[row][column].category == "Weapon")
+		{
+			m_stats.m_attack_damage += ItemManager::Instance(m_renderer, Vector2D())->m_items[itemID].damage;
+		}
+		else if (InventoryManager::Instance(m_renderer)->m_equip_slot[row][column].category == "Armor")
+		{
+			m_stats.m_defence += ItemManager::Instance(m_renderer, Vector2D())->m_items[itemID].defence;
+		}
+		else if (InventoryManager::Instance(m_renderer)->m_equip_slot[row][column].category == "Shield")
+		{
+			m_stats.m_defence += ItemManager::Instance(m_renderer, Vector2D())->m_items[itemID].defence;
+		}
+		else if (InventoryManager::Instance(m_renderer)->m_equip_slot[row][column].category == "Helmet")
+		{
+			m_stats.m_defence += ItemManager::Instance(m_renderer, Vector2D())->m_items[itemID].defence;
+		}
+		else if (InventoryManager::Instance(m_renderer)->m_equip_slot[row][column].category == "Potion")
+		{
+			//TBA
+		}
+		else if (InventoryManager::Instance(m_renderer)->m_equip_slot[row][column].category == "Amulet")
+		{
+			//TBA
+		}
+	}
+	else if (state == "Decrease")
+	{
+		if (InventoryManager::Instance(m_renderer)->m_equip_slot[row][column].category == "Weapon")
+		{
+			m_stats.m_attack_damage -= ItemManager::Instance(m_renderer, Vector2D())->m_items[itemID].damage;
+		}
+		else if (InventoryManager::Instance(m_renderer)->m_equip_slot[row][column].category == "Armor")
+		{
+			m_stats.m_defence -= ItemManager::Instance(m_renderer, Vector2D())->m_items[itemID].defence;
+		}
+		else if (InventoryManager::Instance(m_renderer)->m_equip_slot[row][column].category == "Shield")
+		{
+			m_stats.m_defence -= ItemManager::Instance(m_renderer, Vector2D())->m_items[itemID].defence;
+		}
+		else if (InventoryManager::Instance(m_renderer)->m_equip_slot[row][column].category == "Helmet")
+		{
+			m_stats.m_defence -= ItemManager::Instance(m_renderer, Vector2D())->m_items[itemID].defence;
+		}
+		else if (InventoryManager::Instance(m_renderer)->m_equip_slot[row][column].category == "Potion")
+		{
+			//TBA
+		}
+		else if (InventoryManager::Instance(m_renderer)->m_equip_slot[row][column].category == "Amulet")
+		{
+			//TBA
+		}
+	}
+}
+
+void Character::PlayerDead()
+{
+	//TODO :: Code to respawn player
+}

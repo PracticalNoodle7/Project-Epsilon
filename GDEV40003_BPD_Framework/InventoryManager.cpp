@@ -2,6 +2,7 @@
 #include "Texture2D.h"
 #include "Constants.h"
 #include "Item.h"
+#include "GameText.h"
 
 //initialise instance to nullptr
 InventoryManager* InventoryManager::m_instance = nullptr;
@@ -45,6 +46,8 @@ InventoryManager::InventoryManager(SDL_Renderer* renderer)
 
 	LoadInventory(InventorySlot);
 	LoadEquip(EquipmentSlot);
+
+	m_text = new GameText(m_renderer, "fonts/arial.ttf", 18);
 }
 
 InventoryManager::~InventoryManager()
@@ -113,6 +116,18 @@ void InventoryManager::Render()
 			}
 		}
 	}
+
+	m_text->SetColor({ 255, 255, 255, 255 });
+
+	m_text->RenderTextAt("Max Health :", 150, 350);
+	m_text->RenderNumberAt(m_character->m_stats.m_health.m_max_health, 300, 350);
+
+	m_text->RenderTextAt("Defence :", 150, 375);
+	m_text->RenderNumberAt(m_character->m_stats.m_defence, 300, 375);
+
+	m_text->RenderTextAt("Attack Damage :", 150, 400);
+	m_text->RenderNumberAt(m_character->m_stats.m_attack_damage, 300, 400);
+
 }
 
 void InventoryManager::LoadInventory(int arr[10][15])
@@ -142,6 +157,8 @@ void InventoryManager::LoadEquip(int arr[3][2])
 			m_equip_slot[row][column].x = (column + 1.5) * 100;
 			m_equip_slot[row][column].y = (row + 1.75) * 70;
 			m_equip_slot[row][column].category = categories[row][column];
+			m_equip_slot[row][column].imageTexture = m_empty_slot;
+			m_equip_slot[row][column].imagePath = "images/Inventory/EmptySlot.png";
 			m_equip_slot[row][column].amount = 0;
 			m_equip_slot[row][column].is_full = false;
 		}
@@ -286,8 +303,13 @@ void InventoryManager::Update(float deltaTime, SDL_Event e)
 						y >= slotY && y <= slotY + slotHeight)
 					{
 						// Equipment slot at (row, column) is clicked
-						HandleEquipSlotClick(row, column);
-						break;
+
+						if (m_equip_slot[row][column].imageTexture != m_empty_slot)
+						{
+							HandleEquipSlotClick(row, column);
+							break;
+						}
+
 					}
 				}
 			}
@@ -319,7 +341,11 @@ void InventoryManager::HandleSlotClick(int inv_row, int inv_column, int item)
 
 					// Clear the inventory slot
 					EmptyInvSlot(inv_row, inv_column);
-					return; // Once item is placed, exit loop
+
+					//Update the player stats
+					m_character->UpdatePlayerStats(row, column, "Increase");
+
+					return;
 				}
 			}
 		}
@@ -335,7 +361,9 @@ void InventoryManager::HandleEquipSlotClick(int row, int column)
 	if (m_equip_slot[row][column].imageTexture != m_empty_slot)
 	{
 		AddToInventory(m_equip_slot[row][column].imagePath, m_equip_slot[row][column].amount);
+		m_character->UpdatePlayerStats(row, column, "Decrease");
 		EmptyEquipSlot(row, column);
+
 	}
 }
 
@@ -356,10 +384,3 @@ void InventoryManager::EmptyEquipSlot(int row, int column)
 	m_equip_slot[row][column].is_full = false;
 	m_equip_slot[row][column].amount = 0;
 }
-
-
-
-
-
-
-

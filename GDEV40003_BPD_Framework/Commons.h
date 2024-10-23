@@ -95,6 +95,30 @@ struct Damage
 	}
 };
 
+struct PlayerStats
+{
+	float m_attack_damage;
+	float m_defence;
+	Health m_health;  // Embed a Health struct as a member
+
+	// Constructor for PlayerStats
+	PlayerStats(float initial_attack_damage, float initial_defence, float initial_max_health, float initial_bar_width) : m_health(initial_max_health, initial_bar_width) // Initialize Health
+	{
+		m_attack_damage = initial_attack_damage;
+		m_defence = initial_defence;
+	}
+
+	//// Example method for PlayerStats
+	//void Attack(Damage& enemyDamage)
+	//{
+	//	float damage_to_apply = enemyDamage.GetDamage() - m_defence;
+	//	if (damage_to_apply > 0)
+	//	{
+	//		m_health.TakeDamage(damage_to_apply);
+	//	}
+	//}
+};
+
 enum Layer
 {
 	BACKGROUND,
@@ -149,6 +173,7 @@ enum Collision_Type
 {
 	CHASE,
 	ATTACK,
+	BASIC
 };
 
 struct Rect2D

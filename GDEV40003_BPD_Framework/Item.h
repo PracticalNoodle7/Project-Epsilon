@@ -2,6 +2,9 @@
 #include "GameObject.h"
 #include "vector"
 
+class Character;
+class BackgroundManager;
+
 class Item : public GameObject
 {
 public:
@@ -9,10 +12,10 @@ public:
 	~Item();
 
 	virtual void Render() override;
-	virtual void Update(float deltaTime, SDL_Event e) override;
+	void Update(float deltaTime, SDL_Event e) override;
 
-	void Move(Vector2D movement, float deltaTime);
-	void Rolling(Vector2D movement, float deltaTime);
+	void Move(Vector2D movement, float deltaTime) override;
+	void Rolling(Vector2D movement, float deltaTime) override;
 
 	void DropItem(string imagePath, Vector2D m_position, int m_quantity);
 	void RemoveItem(const std::string& imagePath);

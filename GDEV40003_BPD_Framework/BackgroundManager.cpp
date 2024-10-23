@@ -447,7 +447,37 @@ void BackgroundManager::PreventOutOfBounds(Character* m_character, int row, int 
         {
             movement.x += 2;
         }
+        break;
+    }
 
+    // Normalize the movement vector to prevent faster diagonal movement
+    if (movement.x != 0 || movement.y != 0)
+    {
+        movement = movement.Normalize();
+
+        MoveBack(movement, deltaTime);
+    }
+}
+
+void BackgroundManager::PreventOutOfBounds(TileType direction, float deltaTime)
+{
+    switch (direction)
+    {
+    case TOP:
+        movement.y -= 2;
+        break;
+
+    case LEFT:
+        movement.x -= 2;
+        break;
+
+    case RIGHT:
+        movement.x += 2;
+        break;
+
+    case BOTTOM:
+        movement.y += 2;
+        break;
     }
 
     // Normalize the movement vector to prevent faster diagonal movement
@@ -468,7 +498,7 @@ void BackgroundManager::SetSpawnPoints()
         for (int column = 0; column < columns; column++)
         {
             //Set type 0 as spawn locations
-            if (m_background_map[row][column].type == 0 && IsSpawnNearPlayer(row, column))
+            if (m_background_map[row][column].type == 1 && IsSpawnNearPlayer(row, column))
             {
                 // Add the tile's position to the list of spawn points
                 Vector2D spawnPosition(m_background_map[row][column].x, m_background_map[row][column].y);
@@ -486,7 +516,7 @@ bool BackgroundManager::IsSpawnNearPlayer(int row, int column)
 
     if (!distance < 100)
     {
-        return distance < 300;
+        return distance < 500;
     }
 }
 

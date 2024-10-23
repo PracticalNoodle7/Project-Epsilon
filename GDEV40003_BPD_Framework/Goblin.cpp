@@ -9,13 +9,14 @@ Goblin::Goblin(SDL_Renderer* renderer, Vector2D start_position) : BasicEnemy(ren
 	}
 
 	// Initialize m_drop_items with the paths
-	m_drop_items[0] = "images/Tiles/tile_0103.png";
-	m_drop_items[1] = "images/Tiles/tile_0102.png";
-	m_drop_items[2] = "images/Tiles/tile_0101.png";
+	m_drop_items[0] = "images/Items/tile_0104.png";
+	m_drop_items[1] = "images/Items/tile_0102.png";
+	m_drop_items[2] = "images/Items/tile_0123.png";
 }
 
 Goblin::~Goblin()
 {
-
+	delete m_enemy;
+	m_enemy = nullptr;
 }
 

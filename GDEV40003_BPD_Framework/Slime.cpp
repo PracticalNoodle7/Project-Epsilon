@@ -1,11 +1,11 @@
-#include "Bat.h"
+#include "Slime.h"
 
-Bat::Bat(SDL_Renderer* renderer, Vector2D start_position) : BasicEnemy(renderer, start_position)
+Slime::Slime(SDL_Renderer* renderer, Vector2D start_position) : BasicEnemy(renderer, start_position)
 {
 	//load texture
 	if (m_texture != nullptr)
 	{
-		m_enemy = m_texture->LoadFromTileMap("images/Enemy/Bat.png");
+		m_enemy = m_texture->LoadFromTileMap("images/Enemy/Slime.png");
 	}
 
 	// Initialize m_drop_items with the paths
@@ -14,7 +14,7 @@ Bat::Bat(SDL_Renderer* renderer, Vector2D start_position) : BasicEnemy(renderer,
 	m_drop_items[2] = "images/Items/tile_0123.png";
 }
 
-Bat::~Bat()
+Slime::~Slime()
 {
 	delete m_enemy;
 	m_enemy = nullptr;

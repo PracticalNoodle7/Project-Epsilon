@@ -9,6 +9,7 @@ class Level1BackgroundManager;
 class BasicEnemy;
 class TestArena;
 class Item;
+class GameText;
 
 class GameScreenLevel1 : GameScreen
 {
@@ -18,7 +19,7 @@ public:
 
 	void Render() override;
 	void Update(float deltaTime, SDL_Event e) override;
-	void UpdateCollions();
+	void UpdateCollions(float deltaTime, SDL_Event e);
 
 	Character* GetCharacter() override;
 
@@ -31,5 +32,6 @@ private:
 	BasicEnemy* m_basic_enemy;
 	TestArena* m_test_arena;
 	Item* m_item;
+	GameText* m_text;
 };
 

@@ -5,6 +5,7 @@
 
 class TheRiftBackground;
 class Character;
+class Teleporter;
 
 class GameScreenTheRift : GameScreen
 {
@@ -14,7 +15,7 @@ public:
 
 	void Render() override;
 	void Update(float deltaTime, SDL_Event e) override;
-	void UpdateCollions(float deltaTime);
+	void UpdateCollions(float deltaTime, SDL_Event e);
 
 	Character* GetCharacter() override;
 
@@ -24,5 +25,6 @@ private:
 	//Declaring class pointers
 	Character* m_character;
 	TheRiftBackground* m_background;
+	Teleporter* m_teleporter;
 };
 

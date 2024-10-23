@@ -5,7 +5,6 @@
 
 FACING GameObject::m_facing_direction = FACING::FACING_RIGHT;
 bool GameObject::m_is_moving = false;
-bool GameObject::m_can_move = true;
 bool GameObject::m_rolling;
 bool GameObject::m_move_up = false;
 bool GameObject::m_move_left = false;
@@ -17,15 +16,20 @@ GameObject::GameObject(SDL_Renderer* renderer, Vector2D start_position)
 	m_renderer = renderer;
 	m_position = start_position;
 	previousPosition = start_position;
+	m_width = 32;
+	m_height = 32;
+
+	m_can_move = true;
 
 	//load texture
 	m_texture = new Texture2D(m_renderer);
 
 	//Initialising Movment variable
-	m_acceleration = 5;
+	movement.x = movement.y = 0;
 
 	m_collision_radius_chase = 100;
 	m_collision_radius_attack = 10;
+	m_collision_radius_attack = 0;
 
 	srcRect.x = 0;
 	srcRect.y = 0;
@@ -38,93 +42,213 @@ GameObject::~GameObject()
 	m_renderer = nullptr;
 }
 
-void  GameObject::Render()
+void GameObject::MoveGameObject(float deltaTime, SDL_Event e)
 {
+	previousPosition = m_position;
+	movement.x = movement.y = 0;
 
-}
-
-void GameObject::Update(float deltaTime, SDL_Event e)
-{
-	if (m_can_move)
+	if (m_can_move && !m_rolling)
 	{
+		// Calculate movement vector
 		if (m_move_up)
 		{
-			MoveUp(deltaTime);
+			movement.y += 1;
 		}
 		if (m_move_left)
 		{
-			MoveLeft(deltaTime);
+			movement.x += 1;
 		}
 		if (m_move_down)
 		{
-			MoveDown(deltaTime);
+			movement.y -= 1;
 		}
 		if (m_move_right)
 		{
-			MoveRight(deltaTime);
+			movement.x -= 1;
 		}
+
 	}
 
-	//handle the events
-	switch (e.type)
+	if (m_rolling)
 	{
-	case SDL_KEYDOWN:
+		Rolling(movement, deltaTime);
+	}
 
-		switch (e.key.keysym.sym)
+	// Normalize the movement vector to prevent faster diagonal movement
+	if (movement.x != 0 || movement.y != 0)
+	{
+		movement = movement.Normalize();
+		m_is_moving = true;
+
+		// Apply movement
+		if (!m_rolling)
 		{
-			//Press W to move up
-		case SDLK_w:
-			m_move_up = true;
-			m_is_moving = true;
-			break;
-
-			//Press A to move left
-		case SDLK_a:
-			m_move_left = true;
-			m_is_moving = true;
-			break;
-
-			//Press S to move down
-		case SDLK_s:
-			m_move_down = true;
-			m_is_moving = true;
-			break;
-
-			//Press D to move right
-		case SDLK_d:
-			m_move_right = true;
-			m_is_moving = true;
-			break;
-		}
-
-	case SDL_KEYUP:
-		switch (e.key.keysym.sym)
-		{
-			//Check if w is up
-		case SDLK_w:
-			m_move_up = false;
-			m_is_moving = false;
-			break;
-
-			//Check if a is up
-		case SDLK_a:
-			m_move_left = false;
-			m_is_moving = false;
-			break;
-
-			//Check if s is up
-		case SDLK_s:
-			m_move_down = false;
-			m_is_moving = false;
-			break;
-
-			//Check if d is up
-		case SDLK_d:
-			m_move_right = false;
-			m_is_moving = false;
-			break;
+			Move(movement, deltaTime);
 		}
 	}
+
+	m_collision_radius_basic = srcRect.w / 2;
+}
+
+void GameObject::MoveBack(Character* m_character, int X, int Y, TileType tile, float deltaTime)
+{
+	Vector2D Difference;
+
+	Difference.x = X - m_character->m_position.x;
+	Difference.y = Y - m_character->m_position.y;
+
+	switch (tile)
+	{
+	case LEFT:
+		if (Difference.x < 0)
+		{
+			movement.x -= 2;
+		}
+		else
+		{
+			movement.x += 2;
+		}
+		break;
+
+	case RIGHT:
+		if (Difference.x < -5)
+		{
+			movement.x -= 2;
+		}
+		else
+		{
+			movement.x += 2;
+		}
+		break;
+
+	case TOP:
+		if (Difference.y < 0)
+		{
+			movement.y -= 2;
+		}
+		else
+		{
+			movement.y += 2;
+		}
+		break;
+
+	case BOTTOM:
+		if (Difference.y < 0)
+		{
+			movement.y -= 2;
+		}
+		else
+		{
+			movement.y += 2;
+		}
+
+		if (Difference.x < 0)
+		{
+			movement.x -= 2;
+		}
+		else
+		{
+			movement.x += 2;
+		}
+		break;
+	}
+
+	// Normalize the movement vector to prevent faster diagonal movement
+	if (movement.x != 0 || movement.y != 0)
+	{
+		movement = movement.Normalize();
+
+		// Apply movement to the GameObjects
+		m_position.x += movement.x * deltaTime * 200;
+		m_position.y += movement.y * deltaTime * 200;
+	}
+}
+
+void GameObject::MoveBack(Character* m_character, GameObject* Obj, BackgroundManager* m_background, float deltaTime)
+{
+	Vector2D Difference;
+	TileType Direction_for_background;
+
+	Difference.x = Obj->m_position.x - m_character->m_position.x;
+	Difference.y = Obj->m_position.y - m_character->m_position.y;
+
+	//Player is above the object
+	if (Difference.y > 0)
+	{
+		movement.y += 2;
+		Direction_for_background = BOTTOM;
+	}
+	//Player is next to the object
+	else if (Difference.y < 0 && m_character->m_position.y < Obj->m_position.y + 92)
+	{
+
+		//Player is left of the object
+		if (Difference.x > 0)
+		{
+			movement.x += 2;
+			Direction_for_background = RIGHT;
+		}
+		//Player is right of the object
+		else
+		{
+			movement.x -= 2;
+			Direction_for_background = LEFT;
+		}
+	}
+	//Player is under the object
+	else
+	{
+		movement.y -= 2;
+		Direction_for_background = TOP;
+	}
+
+	// Normalize the movement vector to prevent faster diagonal movement
+	if (movement.x != 0 || movement.y != 0)
+	{
+		movement = movement.Normalize();
+
+		// Apply movement to the GameObjects
+		m_position.x += movement.x * deltaTime * 200;
+		m_position.y += movement.y * deltaTime * 200;
+	}
+
+	m_background->PreventOutOfBounds(Direction_for_background, deltaTime);
+}
+
+void GameObject::Move(Vector2D movement, float deltaTime)
+{
+	// Apply movement to the GameObjects
+	m_position.x += movement.x * deltaTime * 200;
+	m_position.y += movement.y * deltaTime * 200;
+}
+
+void GameObject::Rolling(Vector2D movement, float deltaTime)
+{
+	switch (m_facing_direction)
+	{
+	case FACING::FACING_RIGHT:
+		movement.x -= 1.5;
+		movement.y = 0;
+		break;
+
+	case FACING::FACING_LEFT:
+		movement.x += 1.5;
+		movement.y = 0;
+		break;
+
+	case FACING::FACING_DOWN:
+		movement.y -= 1.5;
+		movement.x = 0;
+		break;
+
+	case FACING::FACING_UP:
+		movement.y += 1.5;
+		movement.x = 0;
+		break;
+	}
+
+	m_position.x += movement.x * deltaTime * 200;
+	m_position.y += movement.y * deltaTime * 200;
 }
 
 void GameObject::SetPosition(Vector2D new_position)
@@ -132,45 +256,14 @@ void GameObject::SetPosition(Vector2D new_position)
 	m_position = new_position;
 }
 
-void GameObject::MoveUp(float deltaTime)
-{
-	if (m_move_up)
-	{
-		m_facing_direction = FACING::FACING_UP;
-		m_position.y += deltaTime * 100;
-	}
-}
-
-void GameObject::MoveLeft(float deltaTime)
-{
-	if (m_move_left)
-	{
-		m_facing_direction = FACING::FACING_LEFT;
-		m_position.x += deltaTime * 100;
-	}
-}
-
-void GameObject::MoveDown(float deltaTime)
-{
-	if (m_move_down)
-	{
-		m_facing_direction = FACING::FACING_DOWN;
-		m_position.y -= deltaTime * 100;
-	}
-}
-
-void GameObject::MoveRight(float deltaTime)
-{
-	if (m_move_right)
-	{
-		m_facing_direction = FACING::FACING_RIGHT;
-		m_position.x -= deltaTime * 100;
-	}
-}
-
 Vector2D GameObject::GetPosition()
 {
 	return m_position;
+}
+
+Rect2D GameObject::GetCollisionBox(float offset_x, float offset_y)
+{
+	return Rect2D(m_position.x + offset_x, m_position.y + offset_y, m_width, m_height);
 }
 
 Rect2D GameObject::GetAttackCollision()
@@ -204,5 +297,9 @@ float GameObject::GetCollisionRadius(Collision_Type Type)
 	else if (Type == ATTACK)
 	{
 		return m_collision_radius_attack;
+	}
+	else if (Type == BASIC)
+	{
+		return  m_collision_radius_basic;
 	}
 }

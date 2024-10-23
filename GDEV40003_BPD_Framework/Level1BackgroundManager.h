@@ -11,5 +11,6 @@ public:
 
 protected:
 	SDL_Texture* m_grass;
+	SDL_Texture* m_walls;
 };
 

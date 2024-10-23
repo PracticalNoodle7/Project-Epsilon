@@ -26,7 +26,8 @@ Collisions* Collisions::Instance()
 
 bool Collisions::Circle(GameObject* a, GameObject* b, Collision_Type Type)
 {
-	Vector2D vec = Vector2D((a->GetPosition().x - b->GetPosition().x), (a->GetPosition().y - b->GetPosition().y));
+	Vector2D vec = Vector2D(((a->GetPosition().x + a->m_width) - (b->GetPosition().x + b->m_width)), 
+		                    ((a->GetPosition().y + a->m_height) - (b->GetPosition().y + b->m_height)));
 
 	double distance = sqrt((vec.x * vec.x) + (vec.y * vec.y));
 

@@ -9,7 +9,7 @@ public:
 	~ItemManager();
 
 	static ItemManager* Instance(SDL_Renderer* renderer, Vector2D start_position);
-	int GetItemData(string imagePath);	
+	int GetItemData(string imagePath);
 	void SetUpItems();
 	
 	vector<ItemProperties> m_items;
